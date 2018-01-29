@@ -1,0 +1,25 @@
+{
+  "name": "goldencodeio/bitrix-restify",
+  "description": "1C-Bitrix REST API",
+  "keywords": ["bitrix", "rest", "api", "rest-api"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Constantine Karnaukhov",
+      "email": "1119@zolotoykod.ru"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "goldencodeio/tools.php": "dev-master",
+    "mikecao/flight": "^1.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "goldencode\\Bitrix\\Restify\\": "src/"
+    }
+  }
+}
