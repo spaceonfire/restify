@@ -5,9 +5,11 @@ namespace goldencode\Bitrix\Restify;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use CFile;
+use CSite;
 use Exception;
 use Flight;
 use goldencode\Bitrix\Restify\Errors\REQUIRE_ERROR;
+use goldencode\Helpers\Bitrix\Tools as BitrixTools;
 
 class Core {
 	protected $options = [
@@ -36,29 +38,26 @@ class Core {
 		'post:all' => [],
 	];
 
-	protected $fileFields = [
-		'PREVIEW_PICTURE',
-		'DETAIL_PICTURE',
-		'PICTURE',
-		'PSA_LOGOTIP',
-		'LOGOTIP'
-	];
-
-	protected $dateFields = [
-		'DATE_CREATE',
-		'TIMESTAMP_X',
-		'ACTIVE_FROM',
-		'ACTIVE_TO',
-		'PERSONAL_BIRTHDAY',
-		'PERSONAL_BIRTHDAY_DATE',
-		'DATE_INSERT',
-		'DATE_UPDATE',
-		'DATE_PAYED',
-		'DATE_STATUS',
-		'DATE_ALLOW_DELIVERY',
-		'DATE_PAY_BEFORE',
-		'DATE_BILL',
-		'DATE_CANCELED',
+	protected $formatters = [
+		'PREVIEW_PICTURE' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
+		'DETAIL_PICTURE' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
+		'PICTURE' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
+		'PSA_LOGOTIP' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
+		'LOGOTIP' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
+		'DATE_CREATE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'TIMESTAMP_X' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'ACTIVE_FROM' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'ACTIVE_TO' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'PERSONAL_BIRTHDAY' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'PERSONAL_BIRTHDAY_DATE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_INSERT' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_UPDATE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_PAYED' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_STATUS' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_ALLOW_DELIVERY' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_PAY_BEFORE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_BILL' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'DATE_CANCELED' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
 	];
 
 	public function __construct()
@@ -113,6 +112,7 @@ class Core {
 	 * @return \flight\net\Request
 	 */
 	public function request() {
+		global $DB;
 		$req = Flight::request();
 
 		foreach (['order', 'filter', 'select', 'navParams'] as $field) {
@@ -150,9 +150,18 @@ class Core {
 		}
 
 		// parse dates
-		foreach ($this->dateFields as $field)
+		$dateFields = array_filter($this->formatters, function($f) {
+			return $f === 'goldencode\Bitrix\Restify\Formatter\DateFormatter';
+		});
+		foreach ($dateFields as $field => $formatter)
 			if ($req->data->__isset($field))
-				$req->data->__set($field, date('d.m.Y  H:i:s', strtotime($req->data->__get($field))));
+				$req->data->__set(
+					$field,
+					date(
+						$DB->DateFormatToPHP(CSite::GetDateFormat()),
+						strtotime($req->data->__get($field))
+					)
+				);
 
 		return $req;
 	}
@@ -203,62 +212,16 @@ class Core {
 	 * @return array
 	 */
 	public function prepareOutput(array $item) {
-		$item = $this->removeTildaKeys($item);
+		$item = BitrixTools::removeTildaKeys($item);
 		$item = $this->decodeSpecialChars($item);
 
-		// Files
-		foreach ($this->fileFields as $filePath)
-			if ($item[$filePath])
-				$item[$filePath] = $this->getFile($item[$filePath]);
-
-		// Format dates
-		foreach ($this->dateFields as $datePath)
-			if ($item[$datePath])
-				$item[$datePath] = date('c', strtotime($item[$datePath]));
+		// Format fields
+		foreach ($this->formatters as $field => $formatter) {
+			if ($item[$field])
+				$item[$field] = call_user_func_array([$formatter, 'format'], [$item[$field]]);
+		}
 
 		return $item;
-	}
-
-
-	/**
-	 * Remove keys started with tilda (~)
-	 * @param array $data
-	 * @return array
-	 */
-	protected function removeTildaKeys(array $data) {
-		$deleteKeys = array_filter(array_keys($data), function($key) {
-			return strpos($key, '~') === 0;
-		});
-		foreach ($deleteKeys as $key) unset($data[$key]);
-		return $data;
-	}
-
-
-	/**
-	 * Get bitrix file, remove tilda keys and pick model fields
-	 * @param $fileId
-	 * @return array
-	 */
-	protected function getFile($fileId) {
-		$rawFile = CFile::GetFileArray($fileId);
-		$rawFile = $this->removeTildaKeys($rawFile);
-
-		$selectFields = [
-			'ID',
-			'SRC',
-			'HEIGHT',
-			'WIDTH',
-			'FILE_SIZE',
-			'CONTENT_TYPE',
-			'ORIGINAL_NAME',
-			'DESCRIPTION'
-		];
-
-		$file = [];
-		foreach ($selectFields as $field)
-			$file[$field] = $rawFile[$field];
-
-		return $file;
 	}
 
 
