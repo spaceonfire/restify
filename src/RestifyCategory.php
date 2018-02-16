@@ -98,6 +98,8 @@ class RestifyCategory extends Core {
 	 * @throws Exception
 	 */
 	public function readOne($id) {
+		// disable filter
+		$this->options['defaults filter'] = ['ACTIVE' => 'Y'];
 		$this->readMany($id);
 	}
 
