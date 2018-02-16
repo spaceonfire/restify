@@ -46,6 +46,8 @@ class RestifyUser extends Core {
 		);
 		$this->options = array_merge($this->options, $options);
 
+		$this->formatters = array_merge($this->formatters, $this->options['formatters'] ?? []);
+
 		$manyUri =
 			$this->options['prefix'] .
 			$this->options['version'] .

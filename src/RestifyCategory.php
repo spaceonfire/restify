@@ -32,6 +32,8 @@ class RestifyCategory extends Core {
 
 		$this->options = array_merge($this->options, $options);
 
+		$this->formatters = array_merge($this->formatters, $this->options['formatters'] ?? []);
+
 		try {
 			$this->iblock = IblockUtility::getIblockIdByCode($options['iblock']);
 		} catch (\Exception $exception) {

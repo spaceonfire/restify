@@ -36,7 +36,7 @@ class Restify extends Core {
 		);
 		$this->options = array_merge($this->options, $options);
 
-		$this->formatters = array_merge($this->formatters, $this->options['formatters']);
+		$this->formatters = array_merge($this->formatters, $this->options['formatters'] ?? []);
 
 		try {
 			$this->iblock = IblockUtility::getIblockIdByCode($options['iblock']);
