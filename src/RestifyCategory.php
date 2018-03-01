@@ -49,7 +49,7 @@ class RestifyCategory extends Core {
 
 		Flight::route("GET $manyUri", [$this, 'readMany']);
 		Flight::route("POST $manyUri", [$this, 'create']);
-		Flight::route("POST $manyUri/count", [$this, 'count']);
+		Flight::route("GET $manyUri/count", [$this, 'count']);
 
 		Flight::route("GET $oneUri", [$this, 'readOne']);
 		Flight::route("POST $oneUri", [$this, 'update']);
