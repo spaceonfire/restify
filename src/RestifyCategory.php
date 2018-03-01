@@ -49,6 +49,7 @@ class RestifyCategory extends Core {
 
 		Flight::route("GET $manyUri", [$this, 'readMany']);
 		Flight::route("POST $manyUri", [$this, 'create']);
+		Flight::route("POST $manyUri/count", [$this, 'count']);
 
 		Flight::route("GET $oneUri", [$this, 'readOne']);
 		Flight::route("POST $oneUri", [$this, 'update']);
@@ -104,6 +105,29 @@ class RestifyCategory extends Core {
 		$this->options['defaults filter'] = ['ACTIVE' => 'Y'];
 		$this->readMany($id);
 	}
+
+	/**
+	 * Get categories count in iblock
+	 * @throws Exception
+	 */
+	public function count() {
+		$req = $this->request();
+		$order = $req->query->__get('order');
+		$filter = $req->query->__get('filter');
+
+		$filter['IBLOCK_ID'] = $this->iblock;
+
+		$query = CIBlockSection::GetList($order, $filter, false, ['ID']);
+
+		$results = [];
+		while ($item = $query->GetNext()) {
+			$item = $this->prepareOutput($item);
+			$results[] = $item;
+		}
+
+		$this->json(['count' => count($results)]);
+	}
+
 
 	/**
 	 * Create category

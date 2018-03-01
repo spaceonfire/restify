@@ -53,6 +53,7 @@ class Restify extends Core {
 
 		Flight::route("GET $manyUri", [$this, 'readMany']);
 		Flight::route("POST $manyUri", [$this, 'create']);
+		Flight::route("POST $manyUri/count", [$this, 'count']);
 
 		Flight::route("GET $oneUri", [$this, 'readOne']);
 		Flight::route("POST $oneUri", [$this, 'update']);
@@ -107,6 +108,28 @@ class Restify extends Core {
 		// disable filter
 		$this->options['defaults filter'] = ['ACTIVE' => 'Y'];
 		$this->readMany($id);
+	}
+
+	/**
+	 * Get items count in iblock
+	 * @throws Exception
+	 */
+	public function count() {
+		$req = $this->request();
+		$order = $req->query->__get('order');
+		$filter = $req->query->__get('filter');
+
+		$filter['IBLOCK_ID'] = $this->iblock;
+
+		$query = CIBlockElement::GetList($order, $filter, false, false, ['ID']);
+
+		$results = [];
+		while ($item = $query->GetNext()) {
+			$item = $this->prepareOutput($item);
+			$results[] = $item;
+		}
+
+		$this->json(['count' => count($results)]);
 	}
 
 	/**
