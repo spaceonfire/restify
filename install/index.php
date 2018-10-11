@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/../include.php';
 
-use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
 use spaceonfire\BMF\ModuleInstaller;
 
@@ -32,7 +31,15 @@ class goldencode_restify extends CModule
 		$this->PARTNER_URI = 'https://zolotoykod.ru/';
 
 		$this->INSTALLER_DIR = __DIR__;
-		$this->INSTALL_PATHS = [];
+		$this->INSTALL_PATHS = [
+			'bitrix',
+		];
+
+		if ($this->isDevelopmentMode()) {
+			$this->DEV_LINKS = [
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock' => __DIR__ . '/bitrix/components/goldencode/restify.iblock',
+			];
+		}
 	}
 
 	public function installDB() {
