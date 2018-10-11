@@ -11,6 +11,7 @@ use CIBlock;
 use CIBlockElement;
 use CIBlockFindTools;
 use CPrice;
+use Emonkak\HttpException\AccessDeniedHttpException;
 use Emonkak\HttpException\BadRequestHttpException;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
@@ -20,6 +21,8 @@ class IblockElementRest extends Basic {
 	private $iblockId;
 
 	private $catalog = false;
+
+	private $permissions = [];
 
 	/**
 	 * IblockRest constructor
@@ -52,6 +55,7 @@ class IblockElementRest extends Basic {
 		}
 
 		$this->registerBasicTransformHandler();
+		$this->registerPermissionsCheck();
 
 		$this->buildSchema();
 	}
@@ -253,6 +257,7 @@ class IblockElementRest extends Basic {
 					(int) $item['BASE_PRICE']['PRODUCT_QUANTITY'] > 0
 				);
 
+			// TODO: get other prices
 	//		if ($this->options['priceId'])
 	//			$item['PRICE'] = CPrice::GetList([], [
 	//				'PRODUCT_ID' => $item['ID'],
@@ -266,6 +271,40 @@ class IblockElementRest extends Basic {
 			}
 
 			$params['result'][$key] = $item;
+		}
+	}
+
+	private function registerPermissionsCheck() {
+		global $goldenCodeRestify;
+		$events = [
+			'pre:create',
+			'pre:update',
+			'pre:delete',
+		];
+
+		foreach ($events as $event) {
+			EventManager::getInstance()->addEventHandler(
+				$goldenCodeRestify->getId(),
+				$event,
+				[$this, 'checkPermissions']
+			);
+		}
+	}
+
+	public function checkPermissions() {
+		global $USER;
+
+		$this->permissions = CIBlock::GetGroupPermissions($this->iblockId);
+		$permissions = $this->permissions;
+
+		$userGroupsPermissions = array_map(function ($group) use ($permissions) {
+			return $permissions[$group];
+		}, $USER->GetUserGroupArray());
+
+		$canWrite = in_array('W', $userGroupsPermissions) || in_array('X', $userGroupsPermissions);
+
+		if (!$canWrite) {
+			throw new AccessDeniedHttpException();
 		}
 	}
 }
