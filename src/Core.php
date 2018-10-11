@@ -4,7 +4,6 @@ namespace goldencode\Bitrix\Restify;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
-use CFile;
 use CSite;
 use Exception;
 use Flight;
@@ -39,25 +38,25 @@ class Core {
 	];
 
 	protected $formatters = [
-		'PREVIEW_PICTURE' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
-		'DETAIL_PICTURE' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
-		'PICTURE' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
-		'PSA_LOGOTIP' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
-		'LOGOTIP' => 'goldencode\Bitrix\Restify\Formatter\FileFormatter',
-		'DATE_CREATE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'TIMESTAMP_X' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'ACTIVE_FROM' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'ACTIVE_TO' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'PERSONAL_BIRTHDAY' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'PERSONAL_BIRTHDAY_DATE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_INSERT' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_UPDATE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_PAYED' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_STATUS' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_ALLOW_DELIVERY' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_PAY_BEFORE' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_BILL' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
-		'DATE_CANCELED' => 'goldencode\Bitrix\Restify\Formatter\DateFormatter',
+		'PREVIEW_PICTURE' => 'goldencode\Bitrix\Restify\Formatters\FileFormatter',
+		'DETAIL_PICTURE' => 'goldencode\Bitrix\Restify\Formatters\FileFormatter',
+		'PICTURE' => 'goldencode\Bitrix\Restify\Formatters\FileFormatter',
+		'PSA_LOGOTIP' => 'goldencode\Bitrix\Restify\Formatters\FileFormatter',
+		'LOGOTIP' => 'goldencode\Bitrix\Restify\Formatters\FileFormatter',
+		'DATE_CREATE' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'TIMESTAMP_X' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'ACTIVE_FROM' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'ACTIVE_TO' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'PERSONAL_BIRTHDAY' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'PERSONAL_BIRTHDAY_DATE' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_INSERT' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_UPDATE' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_PAYED' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_STATUS' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_ALLOW_DELIVERY' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_PAY_BEFORE' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_BILL' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
+		'DATE_CANCELED' => 'goldencode\Bitrix\Restify\Formatters\DateFormatter',
 	];
 
 	public function __construct()
@@ -151,7 +150,7 @@ class Core {
 
 		// parse dates
 		$dateFields = array_filter($this->formatters, function($f) {
-			return $f === 'goldencode\Bitrix\Restify\Formatter\DateFormatter';
+			return $f === 'goldencode\Bitrix\Restify\Formatters\DateFormatter';
 		});
 		foreach ($dateFields as $field => $formatter)
 			if ($req->data->__isset($field))

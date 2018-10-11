@@ -1,8 +1,8 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Formatter;
+namespace goldencode\Bitrix\Restify\Formatters;
 
-interface FormatterInterface {
+interface IFormatter {
 	/**
 	 * Format data
 	 * @param mixed $data

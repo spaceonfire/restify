@@ -1,17 +1,16 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Formatter;
+namespace goldencode\Bitrix\Restify\Formatters;
 
 use CFile;
 
-class FileFormatter implements FormatterInterface {
+class FileFormatter implements IFormatter {
 	/**
 	 * Get bitrix file
 	 * @param string|int $fileId
 	 * @return array
 	 */
-	public static function format($fileId)
-	{
+	public static function format($fileId) {
 		$rawFile = CFile::GetFileArray($fileId);
 
 		$selectFields = [
@@ -26,8 +25,12 @@ class FileFormatter implements FormatterInterface {
 		];
 
 		$file = [];
-		foreach ($selectFields as $field)
+		foreach ($selectFields as $field) {
 			$file[$field] = $rawFile[$field];
+		}
+
+		// TODO: make full path optional
+		$file['SRC'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $file['SRC'];
 
 		return $file;
 	}
