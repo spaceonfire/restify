@@ -19,6 +19,7 @@
     "mikecao/flight": "^1.3.0",
     "spaceonfire/bmf": "1.0.0-beta.1",
     "erusev/parsedown": "1.8.0-beta-5",
+    "emonkak/http-exception": "^2.0.0",
     "ext-json": "*"
   },
   "require-dev": {
