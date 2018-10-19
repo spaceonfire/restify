@@ -43,22 +43,48 @@ abstract class Basic {
 	/**
 	 * @var Context Bitrix Application Context
 	 */
-	protected $context;
+	private $context;
 
 	/**
 	 * @var Request Bitrix Application Context
 	 */
-	protected $flightRequest;
+	private $flightRequest;
 
 	/**
 	 * @var array Entity schema
 	 */
-	protected $schema = [];
+	private $schema = [];
 
+	/**
+	 * @var array Map formatters to schema field types
+	 */
 	protected $formatters = [
 		'goldencode\Bitrix\Restify\Formatters\DateFormatter' => 'date',
 		'goldencode\Bitrix\Restify\Formatters\FileFormatter' => 'file',
 	];
+
+	/**
+	 * @var \CBitrixComponent bitrix component instance
+	 */
+	private $component;
+
+	/**
+	 * Get property value
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function get($name) {
+		return $this->{$name};
+	}
+
+	/**
+	 * Set property value
+	 * @param string $name
+	 * @param mixed $value
+	 */
+	public function set($name, $value): void {
+		$this->{$name} = $value;
+	}
 
 	/**
 	 * Load bitrix modules or response with error

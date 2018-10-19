@@ -10,11 +10,10 @@ if (!Loader::includeModule('goldencode.restify')) return false;
 
 Loc::loadLanguageFile(__FILE__);
 
-class RestifyIblockComponent extends RouterComponent {
-	public function __construct() {
-		$executor = new IblockElementRest([
-			'iblockId' => 1,
-		]);
-		parent::__construct($executor);
+class RestifyIblockElementComponent extends RouterComponent {
+	public function executeComponent() {
+		$executor = new IblockElementRest($this->arParams);
+		$this->setExecutor($executor);
+		parent::executeComponent();
 	}
 }

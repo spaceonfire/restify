@@ -27,9 +27,8 @@ abstract class RouterComponent extends \CBitrixComponent {
 	 */
 	private $executor;
 
-	public function __construct($executor) {
+	public function __construct() {
 		parent::__construct();
-		$this->executor = $executor;
 		Flight::map('error', [$this, 'errorHandler']);
 	}
 
@@ -125,5 +124,20 @@ abstract class RouterComponent extends \CBitrixComponent {
 			'statusCode' => &$this->statusCode,
 		]);
 		$preAnyEvent->send();
+	}
+
+	/**
+	 * @return object
+	 */
+	public function getExecutor() {
+		return $this->executor;
+	}
+
+	/**
+	 * @param object $executor
+	 */
+	public function setExecutor($executor): void {
+		$this->executor = $executor;
+		$this->executor->set('component', $this);
 	}
 }

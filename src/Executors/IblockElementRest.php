@@ -6,6 +6,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Iblock\ElementTable;
 use CCatalog;
 use CIBlock;
 use CIBlockElement;
@@ -16,23 +17,24 @@ use Emonkak\HttpException\BadRequestHttpException;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
+use ReflectionObject;
+use ReflectionProperty;
 
 class IblockElementRest extends Basic {
-	private $iblockId;
+	protected $iblockId;
+	protected $prices = [];
 
 	private $catalog = false;
-
 	private $permissions = [];
 
 	/**
-	 * IblockRest constructor
+	 * IblockElementRest constructor
 	 * @param array $options executor options
 	 * @throws \Bitrix\Main\LoaderException
 	 * @throws InternalServerErrorHttpException
 	 */
 	public function __construct($options) {
 		$this->loadModules('iblock');
-		$catalogLoaded = $this->loadModules('catalog', false);
 
 		if (!$options['iblockId']) {
 			throw new InternalServerErrorHttpException(Loc::getMessage('REQUIRED_PROPERTY', [
@@ -40,14 +42,21 @@ class IblockElementRest extends Basic {
 			]));
 		}
 
-		$props = array_keys(get_object_vars($this));
-		foreach ($props as $prop) {
-			if ($options[$prop]) {
+		// Set default select fields from IblockTable
+		$this->select = array_keys(ElementTable::getMap());
+
+		// Set properties from $options arg. Do not touch private props
+		$reflection = new ReflectionObject($this);
+		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
+		foreach ($properties as $property) {
+			$prop = $property->getName();
+			if (!empty($options[$prop])) {
 				$this->{$prop} = $options[$prop];
 			}
 		}
 
-		if ($catalogLoaded) {
+		// Support catalog
+		if ($this->loadModules('catalog', false)) {
 			$this->catalog = (bool) CCatalog::GetByID($this->iblockId);
 			if ($this->catalog) {
 				$this->registerCatalogTransform();
@@ -63,13 +72,15 @@ class IblockElementRest extends Basic {
 	private function buildSchema() {
 		$connection = Application::getConnection();
 
+		$schema = [];
+
 		// TODO: cache independently from iblock
 		$result = $connection->query('describe b_iblock_element')->fetchAll();
 		foreach ($result as $value) {
-			$this->schema[$value['Field']] = $value['Type'];
+			$schema[$value['Field']] = $value['Type'];
 		}
-		$this->schema['PREVIEW_PICTURE'] = 'file';
-		$this->schema['DETAIL_PICTURE'] = 'file';
+		$schema['PREVIEW_PICTURE'] = 'file';
+		$schema['DETAIL_PICTURE'] = 'file';
 
 		// TODO: cache dependently from iblock
 		$propsQ = CIBlock::GetProperties($this->iblockId, [], ['ACTIVE' => 'Y']);
@@ -83,8 +94,10 @@ class IblockElementRest extends Basic {
 				case 'elist': $type = 'elementlist'; break;
 				case 'eautocomplete': $type = 'elementautocomplete'; break;
 			}
-			$this->schema['PROPERTY_' . $prop['CODE']] = $type;
+			$schema['PROPERTY_' . $prop['CODE']] = $type;
 		}
+
+		$this->set('schema', $schema);
 	}
 
 	public function create() {
@@ -228,7 +241,7 @@ class IblockElementRest extends Basic {
 		if (in_array('*', $this->select)) {
 			$this->select = array_merge(
 				$this->select,
-				array_filter(array_keys($this->schema), function ($path) {
+				array_filter(array_keys($this->get('schema')), function ($path) {
 					return strpos($path, 'PROPERTY_') !== false;
 				})
 			);
@@ -257,12 +270,20 @@ class IblockElementRest extends Basic {
 					(int) $item['BASE_PRICE']['PRODUCT_QUANTITY'] > 0
 				);
 
-			// TODO: get other prices
-	//		if ($this->options['priceId'])
-	//			$item['PRICE'] = CPrice::GetList([], [
-	//				'PRODUCT_ID' => $item['ID'],
-	//				'CATALOG_GROUP_ID' => $this->options['priceId']
-	//			])->Fetch();
+			$prices = array_filter($this->prices, function ($p) use ($item) {
+				return $p !== $item['BASE_PRICE']['CATALOG_GROUP_NAME'];
+			});
+
+			if (!empty($prices)) {
+				$pricesValues = [];
+				foreach ($prices as $price) {
+					$pricesValues[$price] = CPrice::GetList([], [
+						'PRODUCT_ID' => $item['ID'],
+						'CATALOG_GROUP_ID' => $pricesValues,
+					])->Fetch();
+				}
+				$item['PRICES'] = $pricesValues;
+			}
 
 			if (!$item['BASE_PRICE'] && !$item['PRICE']) {
 				unset($item['BASE_PRICE']);
