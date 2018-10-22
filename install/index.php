@@ -39,6 +39,7 @@ class goldencode_restify extends CModule
 			$this->DEV_LINKS = [
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock.element' => __DIR__ . '/bitrix/components/goldencode/restify.iblock.element',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock.section' => __DIR__ . '/bitrix/components/goldencode/restify.iblock.section',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.main.user' => __DIR__ . '/bitrix/components/goldencode/restify.main.user',
 			];
 		}
 	}
