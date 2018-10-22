@@ -6,7 +6,6 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Iblock\ElementTable;
 use CCatalog;
 use CIBlock;
 use CIBlockElement;
@@ -17,15 +16,16 @@ use Emonkak\HttpException\BadRequestHttpException;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
-use ReflectionObject;
-use ReflectionProperty;
 
-class IblockElementRest extends Basic {
+class IblockElementRest {
+	use RestTrait { prepareQuery as private _prepareQuery; }
+
 	protected $iblockId;
 	protected $prices = [];
 
 	private $catalog = false;
 	private $permissions = [];
+	private $entity = 'Bitrix\Iblock\ElementTable';
 
 	/**
 	 * IblockElementRest constructor
@@ -42,18 +42,8 @@ class IblockElementRest extends Basic {
 			]));
 		}
 
-		// Set default select fields from IblockTable
-		$this->select = array_keys(ElementTable::getMap());
-
-		// Set properties from $options arg. Do not touch private props
-		$reflection = new ReflectionObject($this);
-		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
-		foreach ($properties as $property) {
-			$prop = $property->getName();
-			if (!empty($options[$prop])) {
-				$this->{$prop} = $options[$prop];
-			}
-		}
+		$this->setSelectFieldsFromEntityClass();
+		$this->setPropertiesFromArray($options);
 
 		// Support catalog
 		if ($this->loadModules('catalog', false)) {
@@ -65,7 +55,6 @@ class IblockElementRest extends Basic {
 
 		$this->registerBasicTransformHandler();
 		$this->registerPermissionsCheck();
-
 		$this->buildSchema();
 	}
 
@@ -218,7 +207,7 @@ class IblockElementRest extends Basic {
 	}
 
 	public function prepareQuery() {
-		parent::prepareQuery();
+		$this->_prepareQuery();
 
 		// Delete iblock props from filter
 		unset($this->filter['IBLOCK_ID']);

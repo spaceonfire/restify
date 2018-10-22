@@ -30,6 +30,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	public function __construct() {
 		parent::__construct();
 		Flight::map('error', [$this, 'errorHandler']);
+		Flight::map('notFound', [$this, 'notFound']);
 	}
 
 	/**
@@ -40,7 +41,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	public function __call($method, $arguments) {
 		// Throw 404 if method not implemented
 		if (!$this->executor || !method_exists($this->executor, $method)) {
-			throw new NotFoundHttpException(Loc::getMessage('NOT_FOUND_ERROR'));
+			$this->notFound();
 		}
 
 		$this->executor->prepareQuery();
@@ -106,13 +107,13 @@ abstract class RouterComponent extends \CBitrixComponent {
 	}
 
 	public function executeComponent() {
-		Flight::route('POST /', [$this, 'create']);
-		Flight::route('GET /', [$this, 'readMany']);
-		Flight::route('GET /count', [$this, 'count']);
-		Flight::route('GET /@id', [$this, 'readOne']);
-		Flight::route('POST /@id', [$this, 'update']);
-		Flight::route('DELETE /@id', [$this, 'delete']);
-		Flight::start();
+		$this->route('POST /', [$this, 'create']);
+		$this->route('GET /', [$this, 'readMany']);
+		$this->route('GET /count', [$this, 'count']);
+		$this->route('GET /@id', [$this, 'readOne']);
+		$this->route('POST /@id', [$this, 'update']);
+		$this->route('DELETE /@id', [$this, 'delete']);
+		$this->start();
 	}
 
 	private function sendEvent($name) {
@@ -124,6 +125,10 @@ abstract class RouterComponent extends \CBitrixComponent {
 			'statusCode' => &$this->statusCode,
 		]);
 		$preAnyEvent->send();
+	}
+
+	public function notFound() {
+		throw new NotFoundHttpException(Loc::getMessage('NOT_FOUND_ERROR'));
 	}
 
 	/**
@@ -139,5 +144,21 @@ abstract class RouterComponent extends \CBitrixComponent {
 	public function setExecutor($executor): void {
 		$this->executor = $executor;
 		$this->executor->set('component', $this);
+	}
+
+	/**
+	 * Set Flight route
+	 * @param string $pattern
+	 * @param callable $callback
+	 */
+	public function route($pattern, callable $callback): void {
+		Flight::route($pattern, $callback);
+	}
+
+	/**
+	 * Start Flight router
+	 */
+	public function start(): void {
+		Flight::start();
 	}
 }

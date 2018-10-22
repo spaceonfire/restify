@@ -2,7 +2,6 @@
 
 namespace goldencode\Bitrix\Restify\Executors;
 
-use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\Application;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
@@ -15,18 +14,13 @@ use Emonkak\HttpException\BadRequestHttpException;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
-use ReflectionObject;
-use ReflectionProperty;
 
-class IblockSectionRest extends Basic {
-	public $filter = [
-		'ACTIVE' => 'Y',
-		'GLOBAL_ACTIVE' => 'Y',
-	];
+class IblockSectionRest {
+	use RestTrait { prepareQuery as private _prepareQuery; }
 
 	protected $iblockId;
-
 	private $permissions = [];
+	private $entity = 'Bitrix\Iblock\SectionTable';
 
 	/**
 	 * IblockSectionRest constructor
@@ -43,23 +37,16 @@ class IblockSectionRest extends Basic {
 			]));
 		}
 
-		// Set default select fields from IblockTable
-		$this->select = array_keys(SectionTable::getMap());
+		$this->filter = [
+			'ACTIVE' => 'Y',
+			'GLOBAL_ACTIVE' => 'Y',
+		];
 
-		// Set properties from $options arg. Do not touch private props
-		$reflection = new ReflectionObject($this);
-		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
-		foreach ($properties as $property) {
-			$prop = $property->getName();
-			if (!empty($options[$prop])) {
-				$this->{$prop} = $options[$prop];
-			}
-		}
-
+		$this->setSelectFieldsFromEntityClass();
+		$this->setPropertiesFromArray($options);
 		$this->registerBasicTransformHandler();
 		$this->registerPermissionsCheck();
 		$this->registerSectionTransform();
-
 		$this->buildSchema();
 	}
 
@@ -197,7 +184,7 @@ class IblockSectionRest extends Basic {
 	}
 
 	public function prepareQuery() {
-		parent::prepareQuery();
+		$this->_prepareQuery();
 
 		// Delete iblock props from filter
 		unset($this->filter['IBLOCK_ID']);

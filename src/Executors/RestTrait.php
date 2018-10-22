@@ -13,8 +13,10 @@ use Emonkak\HttpException\InternalServerErrorHttpException;
 use Flight;
 use flight\net\Request;
 use goldencode\Helpers\Bitrix\Tools;
+use ReflectionObject;
+use ReflectionProperty;
 
-abstract class Basic {
+trait RestTrait {
 	/**
 	 * @var array Bitrix query order
 	 */
@@ -58,7 +60,7 @@ abstract class Basic {
 	/**
 	 * @var array Map formatters to schema field types
 	 */
-	protected $formatters = [
+	private $formatters = [
 		'goldencode\Bitrix\Restify\Formatters\DateFormatter' => 'date',
 		'goldencode\Bitrix\Restify\Formatters\FileFormatter' => 'file',
 	];
@@ -93,7 +95,7 @@ abstract class Basic {
 	 * @return bool
 	 * @throws \Bitrix\Main\LoaderException
 	 */
-	protected function loadModules($modules, $throw = true) {
+	private function loadModules($modules, $throw = true) {
 		if (!is_array($modules)) {
 			$modules = [$modules];
 		}
@@ -179,7 +181,25 @@ abstract class Basic {
 		];
 	}
 
-	protected function registerBasicTransformHandler() {
+	private function setSelectFieldsFromEntityClass(): void {
+		if (property_exists($this, 'entity') && is_callable([$this->entity, 'getMap'])) {
+			$this->select = array_keys(call_user_func([$this->entity, 'getMap']));
+		}
+	}
+
+	private function setPropertiesFromArray(array $options): void {
+		// Set properties from $options arg. Do not touch private props
+		$reflection = new ReflectionObject($this);
+		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
+		foreach ($properties as $property) {
+			$prop = $property->getName();
+			if (!empty($options[$prop])) {
+				$this->{$prop} = $options[$prop];
+			}
+		}
+	}
+
+	private function registerBasicTransformHandler() {
 		global $goldenCodeRestify;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
@@ -204,7 +224,7 @@ abstract class Basic {
 	 * @param array $item
 	 * @return array
 	 */
-	protected static function decodeSpecialChars($item) {
+	private static function decodeSpecialChars($item) {
 		$contentFields = ['NAME', 'PREVIEW_TEXT', 'DETAIL_TEXT'];
 		foreach ($contentFields as $field) {
 			if ($item[$field]) {
@@ -214,7 +234,7 @@ abstract class Basic {
 		return $item;
 	}
 
-	protected function runFormatters($item) {
+	private function runFormatters($item) {
 		foreach ($this->formatters as $formatter => $type) {
 			$fields = array_keys(array_filter($this->schema, function ($fieldType) use ($type) {
 				return strpos($fieldType, $type) !== false;
@@ -241,7 +261,7 @@ abstract class Basic {
 		return $item;
 	}
 
-	protected function registerOneItemTransformHandler() {
+	private function registerOneItemTransformHandler() {
 		global $goldenCodeRestify;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
