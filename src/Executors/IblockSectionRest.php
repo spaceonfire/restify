@@ -145,7 +145,7 @@ class IblockSectionRest {
 		$DB->StartTransaction();
 
 		try {
-			$id = CIBlockFindTools::GetElementID($id, $id, null, null, $this->filter);
+			$id = CIBlockFindTools::GetSectionID($id, $id, $this->filter);
 			$result = CIBlockSection::Delete($id);
 			if (!$result) {
 				throw new InternalServerErrorHttpException($APPLICATION->LAST_ERROR);
@@ -158,7 +158,7 @@ class IblockSectionRest {
 		$DB->Commit();
 
 		return [
-			$this->success('Element successfully deleted'),
+			$this->success('Section successfully deleted'),
 		];
 	}
 

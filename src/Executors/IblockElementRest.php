@@ -91,13 +91,13 @@ class IblockElementRest {
 
 	public function create() {
 		$el = new CIBlockElement;
-		$elId = $el->Add($this->body);
+		$id = $el->Add($this->body);
 
-		if (!$elId) {
+		if (!$id) {
 			throw new BadRequestHttpException($el->LAST_ERROR);
 		}
 
-		return $this->readOne($elId);
+		return $this->readOne($id);
 	}
 
 	public function readMany() {
