@@ -2,6 +2,7 @@
 
 namespace goldencode\Bitrix\Restify\Executors;
 
+use Exception;
 use CSite;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
@@ -84,7 +85,7 @@ trait RestTrait {
 	 * @param string $name
 	 * @param mixed $value
 	 */
-	public function set($name, $value): void {
+	public function set($name, $value) {
 		$this->{$name} = $value;
 	}
 
@@ -181,13 +182,31 @@ trait RestTrait {
 		];
 	}
 
-	private function setSelectFieldsFromEntityClass(): void {
+	private function setSelectFieldsFromEntityClass() {
 		if (property_exists($this, 'entity') && is_callable([$this->entity, 'getMap'])) {
 			$this->select = array_keys(call_user_func([$this->entity, 'getMap']));
 		}
 	}
 
-	private function setPropertiesFromArray(array $options): void {
+	private function buildSchema() {
+		if (!property_exists($this, 'entity') || !is_callable([$this->entity, 'getMap'])) {
+			throw new Exception('Cannot get entity map');
+		}
+
+		$map = call_user_func([$this->entity, 'getMap']);
+		$schema = [];
+		foreach ($map as $key => $field) {
+			if ($field instanceof \Bitrix\Main\Entity\Field) {
+				$schema[$field->getName()] = $field->getDataType();
+			} else {
+				$schema[$key] = $field['data_type'];
+			}
+		}
+
+		$this->set('schema', $schema);
+	}
+
+	private function setPropertiesFromArray(array $options) {
 		// Set properties from $options arg. Do not touch private props
 		$reflection = new ReflectionObject($this);
 		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);

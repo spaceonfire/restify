@@ -2,7 +2,6 @@
 
 namespace goldencode\Bitrix\Restify\Executors;
 
-use Bitrix\Main\Application;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
@@ -18,7 +17,10 @@ use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
 class IblockElementRest {
-	use RestTrait { prepareQuery as private _prepareQuery; }
+	use RestTrait {
+		prepareQuery as private _prepareQuery;
+		buildSchema as private _buildSchema;
+	}
 
 	protected $iblockId;
 	protected $prices = [];
@@ -58,16 +60,14 @@ class IblockElementRest {
 		$this->buildSchema();
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private function buildSchema() {
-		$connection = Application::getConnection();
+		$this->_buildSchema();
 
-		$schema = [];
+		$schema = $this->get('schema');
 
-		// TODO: cache independently from iblock
-		$result = $connection->query('describe b_iblock_element')->fetchAll();
-		foreach ($result as $value) {
-			$schema[$value['Field']] = $value['Type'];
-		}
 		$schema['PREVIEW_PICTURE'] = 'file';
 		$schema['DETAIL_PICTURE'] = 'file';
 

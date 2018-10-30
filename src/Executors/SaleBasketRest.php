@@ -2,86 +2,96 @@
 
 namespace goldencode\Bitrix\Restify\Executors;
 
+use Bitrix\Main\Application;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
+use CCatalog;
 use CIBlock;
-use CIBlockSection;
+use CIBlockElement;
 use CIBlockFindTools;
+use CPrice;
 use Emonkak\HttpException\AccessDeniedHttpException;
 use Emonkak\HttpException\BadRequestHttpException;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
-class IblockSectionRest {
-	use RestTrait {
-		prepareQuery as private _prepareQuery;
-		buildSchema as private _buildSchema;
-	}
+class SaleBasketRest {
+	use RestTrait { prepareQuery as private _prepareQuery; }
 
 	protected $iblockId;
+	protected $prices = [];
+
+	private $catalog = false;
 	private $permissions = [];
-	private $entity = 'Bitrix\Iblock\SectionTable';
+	private $entity = 'Bitrix\Sale\Internals\BasketTable';
 
 	/**
-	 * IblockSectionRest constructor
+	 * SaleBasketRest constructor
 	 * @param array $options executor options
 	 * @throws \Bitrix\Main\LoaderException
 	 * @throws InternalServerErrorHttpException
-	 * @throws Exception
 	 */
 	public function __construct($options) {
-		$this->loadModules('iblock');
-
-		if (!$options['iblockId']) {
-			throw new InternalServerErrorHttpException(Loc::getMessage('REQUIRED_PROPERTY', [
-				'#PROPERTY#' => 'iblockId',
-			]));
-		}
-
-		$this->filter = [
-			'ACTIVE' => 'Y',
-			'GLOBAL_ACTIVE' => 'Y',
-		];
+		$this->loadModules('sale');
 
 		$this->setSelectFieldsFromEntityClass();
 		$this->setPropertiesFromArray($options);
+
 		$this->registerBasicTransformHandler();
-		$this->registerPermissionsCheck();
-		$this->registerSectionTransform();
 		$this->buildSchema();
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	private function buildSchema() {
-		$this->_buildSchema();
-		$schema = $this->get('schema');
-		$schema['PICTURE'] = 'file';
+		$connection = Application::getConnection();
+
+		$schema = [];
+
+		// TODO: cache independently from iblock
+		$result = $connection->query('describe b_iblock_element')->fetchAll();
+		foreach ($result as $value) {
+			$schema[$value['Field']] = $value['Type'];
+		}
+		$schema['PREVIEW_PICTURE'] = 'file';
 		$schema['DETAIL_PICTURE'] = 'file';
+
+		// TODO: cache dependently from iblock
+		$propsQ = CIBlock::GetProperties($this->iblockId, [], ['ACTIVE' => 'Y']);
+		while ($prop = $propsQ->Fetch()) {
+			$type = strtolower($prop['USER_TYPE'] ?: $prop['PROPERTY_TYPE']);
+			switch ($type) {
+				case 'f': $type = 'file'; break;
+				case 's': $type = 'string'; break;
+				case 'n': $type = 'number'; break;
+				case 'e': $type = 'element'; break;
+				case 'elist': $type = 'elementlist'; break;
+				case 'eautocomplete': $type = 'elementautocomplete'; break;
+			}
+			$schema['PROPERTY_' . $prop['CODE']] = $type;
+		}
+
 		$this->set('schema', $schema);
 	}
 
 	public function create() {
-		$section = new CIBlockSection;
-		$sectionId = $section->Add($this->body);
+		$el = new CIBlockElement;
+		$id = $el->Add($this->body);
 
-		if (!$sectionId) {
-			throw new BadRequestHttpException($section->LAST_ERROR);
+		if (!$id) {
+			throw new BadRequestHttpException($el->LAST_ERROR);
 		}
 
-		return $this->readOne($sectionId);
+		return $this->readOne($id);
 	}
 
 	public function readMany() {
-		$query = CIBlockSection::GetList(
+		$query = CIBlockElement::GetList(
 			$this->order,
 			$this->filter,
 			false,
-			$this->select,
-			$this->navParams
+			$this->navParams,
+			$this->select
 		);
 
 		$results = [];
@@ -123,14 +133,14 @@ class IblockSectionRest {
 			throw new NotFoundHttpException();
 		}
 
-		$id = CIBlockFindTools::GetSectionID($id, $id, $this->filter);
+		$id = CIBlockFindTools::GetElementID($id, $id, null, null, $this->filter);
 
 		unset($this->body['ID']);
 		unset($this->body['IBLOCK_ID']);
 
-		$section = new CIBlockSection;
-		if (!$section->Update($id, $this->body)) {
-			throw new BadRequestHttpException($section->LAST_ERROR);
+		$el = new CIBlockElement;
+		if (!$el->Update($id, $this->body)) {
+			throw new BadRequestHttpException($el->LAST_ERROR);
 		}
 
 		return $this->readOne($id);
@@ -143,8 +153,8 @@ class IblockSectionRest {
 		$DB->StartTransaction();
 
 		try {
-			$id = CIBlockFindTools::GetSectionID($id, $id, $this->filter);
-			$result = CIBlockSection::Delete($id);
+			$id = CIBlockFindTools::GetElementID($id, $id, null, null, $this->filter);
+			$result = CIBlockElement::Delete($id);
 			if (!$result) {
 				throw new InternalServerErrorHttpException($APPLICATION->LAST_ERROR);
 			}
@@ -156,7 +166,7 @@ class IblockSectionRest {
 		$DB->Commit();
 
 		return [
-			$this->success('Section successfully deleted'),
+			$this->success('Element successfully deleted'),
 		];
 	}
 
@@ -165,12 +175,12 @@ class IblockSectionRest {
 
 		$this->select = ['ID'];
 
-		$query = CIBlockSection::GetList(
+		$query = CIBlockElement::GetList(
 			$this->order,
 			$this->filter,
 			false,
-			$this->select,
-			$this->navParams
+			$this->navParams,
+			$this->select
 		);
 		$count = $query->SelectedRowsCount();
 
@@ -209,62 +219,6 @@ class IblockSectionRest {
 					return strpos($path, 'PROPERTY_') !== false;
 				})
 			);
-		}
-	}
-
-	private function registerSectionTransform() {
-		global $goldenCodeRestify;
-		// Register transform
-		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
-			'transform',
-			[$this, 'sectionTransform']
-		);
-	}
-
-	public function sectionTransform(Event $event) {
-		$params = $event->getParameters();
-		foreach ($params['result'] as $key => $item) {
-			$item['ELEMENTS_COUNT'] = (int) (new CIBlockSection())->GetSectionElementsCount(
-				$item['ID'],
-				['CNT_ACTIVE' => 'Y']
-			);
-
-			$params['result'][$key] = $item;
-		}
-	}
-
-	private function registerPermissionsCheck() {
-		global $goldenCodeRestify;
-		$events = [
-			'pre:create',
-			'pre:update',
-			'pre:delete',
-		];
-
-		foreach ($events as $event) {
-			EventManager::getInstance()->addEventHandler(
-				$goldenCodeRestify->getId(),
-				$event,
-				[$this, 'checkPermissions']
-			);
-		}
-	}
-
-	public function checkPermissions() {
-		global $USER;
-
-		$this->permissions = CIBlock::GetGroupPermissions($this->iblockId);
-		$permissions = $this->permissions;
-
-		$userGroupsPermissions = array_map(function ($group) use ($permissions) {
-			return $permissions[$group];
-		}, $USER->GetUserGroupArray());
-
-		$canWrite = in_array('W', $userGroupsPermissions) || in_array('X', $userGroupsPermissions);
-
-		if (!$canWrite) {
-			throw new AccessDeniedHttpException();
 		}
 	}
 }

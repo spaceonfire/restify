@@ -141,7 +141,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	/**
 	 * @param object $executor
 	 */
-	public function setExecutor($executor): void {
+	public function setExecutor($executor) {
 		$this->executor = $executor;
 		$this->executor->set('component', $this);
 	}
@@ -151,14 +151,14 @@ abstract class RouterComponent extends \CBitrixComponent {
 	 * @param string $pattern
 	 * @param callable $callback
 	 */
-	public function route($pattern, callable $callback): void {
+	public function route($pattern, callable $callback) {
 		Flight::route($pattern, $callback);
 	}
 
 	/**
 	 * Start Flight router
 	 */
-	public function start(): void {
+	public function start() {
 		Flight::start();
 	}
 }

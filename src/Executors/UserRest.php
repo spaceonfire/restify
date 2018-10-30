@@ -16,7 +16,9 @@ use Emonkak\HttpException\UnauthorizedHttpException;
 use Exception;
 
 class UserRest {
-	use RestTrait;
+	use RestTrait {
+		buildSchema as private _buildSchema;
+	}
 
 	private $entity = 'Bitrix\Main\UserTable';
 
@@ -36,18 +38,10 @@ class UserRest {
 	}
 
 	private function buildSchema() {
-		$connection = Application::getConnection();
-
-		$schema = [];
-
-		// TODO: cache
-		$result = $connection->query('describe b_user')->fetchAll();
-		foreach ($result as $value) {
-			$schema[$value['Field']] = $value['Type'];
-		}
+		$this->_buildSchema();
+		$schema = $this->get('schema');
 		$schema['PERSONAL_PHOTO'] = 'file';
 		$schema['WORK_LOGO'] = 'file';
-
 		$this->set('schema', $schema);
 	}
 
