@@ -30,6 +30,7 @@ class UserRest {
 	 */
 	public function __construct($options) {
 		$this->loadModules('main');
+		$this->checkEntity();
 		$this->setSelectFieldsFromEntityClass();
 		$this->setPropertiesFromArray($options);
 		$this->registerBasicTransformHandler();
@@ -140,7 +141,7 @@ class UserRest {
 		$DB->Commit();
 
 		return [
-			$this->success('User successfully deleted'),
+			$this->success(Loc::getMessage('MAIN_USER_DELETE')),
 		];
 	}
 

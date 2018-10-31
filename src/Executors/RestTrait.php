@@ -182,20 +182,45 @@ trait RestTrait {
 		];
 	}
 
+	private function checkEntity() {
+		if (
+			property_exists($this, 'entity') &&
+			!is_subclass_of($this->entity, '\Bitrix\Main\Entity\DataManager')
+		) {
+			throw new Exception('entity property must extends \Bitrix\Main\Entity\DataManager');
+		}
+	}
+
 	private function setSelectFieldsFromEntityClass() {
-		if (property_exists($this, 'entity') && is_callable([$this->entity, 'getMap'])) {
-			$this->select = array_keys(call_user_func([$this->entity, 'getMap']));
+		$this->checkEntity();
+		if (is_callable([$this->entity, 'getMap'])) {
+			$map = call_user_func([$this->entity, 'getMap']);
+			$this->select = [];
+			foreach ($map as $key => $field) {
+				if ($field instanceof \Bitrix\Main\Entity\Field) {
+					$this->select[] = $field->getName();
+				} else {
+					$this->select[] = $key;
+				}
+			}
 		}
 	}
 
 	private function buildSchema() {
-		if (!property_exists($this, 'entity') || !is_callable([$this->entity, 'getMap'])) {
+		$this->checkEntity();
+
+		if (!is_callable([$this->entity, 'getMap'])) {
 			throw new Exception('Cannot get entity map');
 		}
 
 		$map = call_user_func([$this->entity, 'getMap']);
 		$schema = [];
 		foreach ($map as $key => $field) {
+			// Skip for expression field cause getDataType() throws error
+			if ($field instanceof \Bitrix\Main\Entity\ExpressionField) {
+				continue;
+			}
+
 			if ($field instanceof \Bitrix\Main\Entity\Field) {
 				$schema[$field->getName()] = $field->getDataType();
 			} else {
@@ -204,6 +229,37 @@ trait RestTrait {
 		}
 
 		$this->set('schema', $schema);
+	}
+
+	private function readManyORM() {
+		$this->checkEntity();
+
+		$is_array_assoc = function ($arr) {
+			$i = 0;
+			foreach ($arr as $k => $val) {
+				if('' . $k !== '' . $i) {
+					return true;
+				}
+				$i++;
+			}
+			return false;
+		};
+
+		if (!$is_array_assoc($this->select)) {
+			$this->select = array_combine(
+				array_values($this->select),
+				array_values($this->select)
+			);
+		}
+
+		$params = [
+			'filter' => $this->filter,
+			'order' => $this->order,
+			'select' => $this->select,
+		];
+		$query = call_user_func_array([$this->entity, 'getList'], [$params]);
+
+		return $query->fetchAll();
 	}
 
 	private function setPropertiesFromArray(array $options) {

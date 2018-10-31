@@ -45,6 +45,7 @@ class IblockSectionRest {
 			'GLOBAL_ACTIVE' => 'Y',
 		];
 
+		$this->checkEntity();
 		$this->setSelectFieldsFromEntityClass();
 		$this->setPropertiesFromArray($options);
 		$this->registerBasicTransformHandler();
@@ -156,7 +157,7 @@ class IblockSectionRest {
 		$DB->Commit();
 
 		return [
-			$this->success('Section successfully deleted'),
+			$this->success(Loc::getMessage('IBLOCK_SECTION_DELETE')),
 		];
 	}
 

@@ -44,6 +44,7 @@ class IblockElementRest {
 			]));
 		}
 
+		$this->checkEntity();
 		$this->setSelectFieldsFromEntityClass();
 		$this->setPropertiesFromArray($options);
 
@@ -181,7 +182,7 @@ class IblockElementRest {
 		$DB->Commit();
 
 		return [
-			$this->success('Element successfully deleted'),
+			$this->success(Loc::getMessage('IBLOCK_ELEMENT_DELETE')),
 		];
 	}
 
