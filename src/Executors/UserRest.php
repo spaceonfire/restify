@@ -281,12 +281,7 @@ class UserRest {
 			}
 		}
 
-		// Number is id
-		if (is_numeric($id) && (int) $id > 0) {
-			return (int) $id;
-		}
-
-		// Find by login
+		// Find by login first
 		$tmpBy = 'LOGIN';
 		$tmpOrder = 'ASC';
 		$user = CUser::GetList(
@@ -301,6 +296,11 @@ class UserRest {
 		)->Fetch();
 		if ($user) {
 			return (int) $user['ID'];
+		}
+
+		// Number is id
+		if (is_numeric($id) && (int) $id > 0) {
+			return (int) $id;
 		}
 
 		throw new NotFoundHttpException();
