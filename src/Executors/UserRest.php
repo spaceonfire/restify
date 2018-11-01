@@ -337,16 +337,16 @@ class UserRest {
 		switch ($permissions) {
 			case 'W': {
 				// Full access, skip check
-				return true;
+				return;
 				break;
 			}
 
 			case 'V': {
 				// Can read all data and change profiles by some groups
 				if ($isWrite) {
-					$this->filter = [
+					$this->filter = array_merge($this->filter, [
 						'GROUPS_ID' => \CGroup::GetSubordinateGroups($USER->GetUserGroupArray()),
-					];
+					]);
 				}
 				break;
 			}
@@ -354,9 +354,9 @@ class UserRest {
 			case 'T': {
 				// Can read all data and change self profile
 				if ($isWrite) {
-					$this->filter = [
+					$this->filter = array_merge($this->filter, [
 						'ID' => $USER->GetID(),
-					];
+					]);
 				}
 			}
 
@@ -369,9 +369,9 @@ class UserRest {
 
 			case 'P': {
 				// Can read and change only self profile
-				$this->filter = [
+				$this->filter = array_merge($this->filter, [
 					'ID' => $USER->GetID(),
-				];
+				]);
 				break;
 			}
 
