@@ -42,7 +42,7 @@ class SaleBasketRest {
 			'LID' => SITE_ID,
 			'ORDER_ID' => 'NULL',
 		]);
-		return $this->readManyORM();
+		return $this->readORM();
 	}
 
 	public function update($id = null) {

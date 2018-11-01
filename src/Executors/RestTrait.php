@@ -34,6 +34,21 @@ trait RestTrait {
 	public $navParams = ['nPageSize' => 25];
 
 	/**
+	 * @var int Bitrix ORM query limit
+	 */
+	public $limit = null;
+
+	/**
+	 * @var int Bitrix ORM query offset
+	 */
+	public $offset = 0;
+
+	/**
+	 * @var string symbol to divide nested select fields
+	 */
+	public $ormNestedSelectSeparator = ':';
+
+	/**
 	 * @var array Bitrix query select fields
 	 */
 	public $select = ['*'];
@@ -122,17 +137,17 @@ trait RestTrait {
 		$this->context = Application::getInstance()->getContext();
 		$this->flightRequest = Flight::request();
 
-		foreach (['order', 'filter', 'select', 'navParams'] as $field) {
+		$reflection = new ReflectionObject($this);
+		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
+		foreach ($properties as $property) {
+			$field = $property->getName();
+
 			$value = $this->context->getRequest()->get($field);
 
 			if (!$value) continue;
 
 			if (json_decode($value, true)) {
 				$value = json_decode($value, true);
-			}
-
-			if (!is_array($value)) {
-				$value = [$value];
 			}
 
 			switch ($field) {
@@ -231,8 +246,10 @@ trait RestTrait {
 		$this->set('schema', $schema);
 	}
 
-	private function readManyORM() {
+	private function readORM() {
 		$this->checkEntity();
+
+		$this->registerOrmNestedFieldsTransform();
 
 		$is_array_assoc = function ($arr) {
 			$i = 0;
@@ -252,18 +269,37 @@ trait RestTrait {
 			);
 		}
 
+		// Reset select to asterisk if no any fields passed
+		if (count($this->select) === 1 && in_array('*', $this->select)) {
+			$this->select = ['*'];
+		}
+
+		if ((!isset($this->limit) || !isset($this->offset)) && !empty($this->navParams)) {
+			$this->limit = (int) $this->navParams['nPageSize'];
+			$this->offset = 0;
+
+			if ($this->navParams['iNumPage']) {
+				$this->offset = $this->limit * (int) $this->navParams['iNumPage'];
+			}
+		}
+
 		$params = [
 			'filter' => $this->filter,
 			'order' => $this->order,
 			'select' => $this->select,
+			'limit' => $this->limit,
+			'offset' => $this->offset,
 		];
 		$query = call_user_func_array([$this->entity, 'getList'], [$params]);
 
 		return $query->fetchAll();
 	}
 
+	/**
+	 * Set public and protected properties from $options arg. Do not touch private props
+	 * @param array $options
+	 */
 	private function setPropertiesFromArray(array $options) {
-		// Set properties from $options arg. Do not touch private props
 		$reflection = new ReflectionObject($this);
 		$properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
 		foreach ($properties as $property) {
@@ -342,12 +378,53 @@ trait RestTrait {
 		EventManager::getInstance()->addEventHandler(
 			$goldenCodeRestify->getId(),
 			'transform',
-			[$this, 'popOneItemTransformAction']
+			[$this, 'popOneItemTransformAction'],
+			false,
+			99999
 		);
 	}
 
 	public function popOneItemTransformAction(Event $event) {
 		$params = $event->getParameters();
 		$params['result'] = array_pop($params['result']);
+	}
+
+	private function registerOrmNestedFieldsTransform() {
+		global $goldenCodeRestify;
+		// Register transform
+		EventManager::getInstance()->addEventHandler(
+			$goldenCodeRestify->getId(),
+			'transform',
+			[$this, 'ormNestedFieldsTransformAction'],
+			false,
+			88888
+		);
+	}
+
+	public function ormNestedFieldsTransformAction(Event $event) {
+		$params = $event->getParameters();
+		foreach ($params['result'] as $key => $item) {
+			$params['result'][$key] = $this->recursiveNestedFieldsParse($item, $this->ormNestedSelectSeparator);
+		}
+	}
+
+	private function recursiveNestedFieldsParse(array $item, $separator = ':') {
+		$nestedKeys = array_filter(array_keys($item), function ($key) use ($separator) {
+			return strpos($key, $separator) !== false;
+		});
+
+		if (!count($nestedKeys)) {
+			return $item;
+		}
+
+		foreach ($nestedKeys as $key) {
+			$prefix = explode($separator, $key);
+			$field = array_pop($prefix);
+			$prefix = implode($separator, $prefix);
+			$item[$prefix][$field] = $item[$key];
+			unset($item[$key]);
+		}
+
+		return $this->recursiveNestedFieldsParse($item, $separator);
 	}
 }
