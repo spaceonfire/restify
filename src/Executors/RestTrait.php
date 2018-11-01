@@ -213,9 +213,19 @@ trait RestTrait {
 			$this->select = [];
 			foreach ($map as $key => $field) {
 				if ($field instanceof \Bitrix\Main\Entity\Field) {
-					$this->select[] = $field->getName();
+					$key2 = $field->getName() .
+						(
+						$field instanceof \Bitrix\Main\Entity\ReferenceField ?
+							$this->ormNestedSelectSeparator :
+							''
+						);
+					$this->select[$key2] = $field->getName();
 				} else {
-					$this->select[] = $key;
+					$key2 = $key;
+					if (isset($field['reference'])) {
+						$key2 .= ':';
+					}
+					$this->select[$key2] = $key;
 				}
 			}
 		}

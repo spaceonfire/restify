@@ -28,9 +28,17 @@ class SaleBasketRest {
 		]);
 
 		$this->filter = [];
+
 		$this->checkEntity();
 		$this->setSelectFieldsFromEntityClass();
 		$this->setPropertiesFromArray($options);
+
+		$sep = $this->ormNestedSelectSeparator;
+		$this->select = [
+			'*',
+			'PRODUCT' . $sep => 'PRODUCT',
+			'ELEMENT' . $sep => 'PRODUCT.IBLOCK',
+		];
 
 		$this->registerBasicTransformHandler();
 		$this->buildSchema();

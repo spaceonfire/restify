@@ -40,15 +40,18 @@ class SaleOrderRest {
 		$this->order = [
 			'DATE_INSERT' => 'DESC',
 		];
-		$this->select = [
-			'*',
-			'BASKET:' => 'BASKET',
-			'BASKET:PRODUCT:' => 'BASKET.PRODUCT',
-			'BASKET:ELEMENT:' => 'BASKET.PRODUCT.IBLOCK',
-		];
 
 		$this->checkEntity();
 		$this->setPropertiesFromArray($options);
+
+		$sep = $this->ormNestedSelectSeparator;
+		$this->select = [
+			'*',
+			'BASKET' . $sep => 'BASKET',
+			'BASKET' . $sep . 'PRODUCT' . $sep => 'BASKET.PRODUCT',
+			'BASKET' . $sep . 'ELEMENT' . $sep => 'BASKET.PRODUCT.IBLOCK',
+		];
+
 		$this->registerPermissionsCheck();
 		$this->registerBasicTransformHandler();
 		$this->buildSchema();
