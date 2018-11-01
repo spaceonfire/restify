@@ -2,7 +2,6 @@
 
 namespace goldencode\Bitrix\Restify\Executors;
 
-use Bitrix\Main\Application;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
