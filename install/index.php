@@ -41,6 +41,7 @@ class goldencode_restify extends CModule
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock.element' => __DIR__ . '/bitrix/components/goldencode/restify.iblock.element',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock.section' => __DIR__ . '/bitrix/components/goldencode/restify.iblock.section',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.basket' => __DIR__ . '/bitrix/components/goldencode/restify.sale.basket',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.order' => __DIR__ . '/bitrix/components/goldencode/restify.sale.order',
 			];
 		}
 	}
