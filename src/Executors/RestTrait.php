@@ -31,7 +31,10 @@ trait RestTrait {
 	/**
 	 * @var array Bitrix query nav params
 	 */
-	public $navParams = ['nPageSize' => 25];
+	public $navParams = [
+		'nPageSize' => 25,
+		'checkOutOfRange' => true,
+	];
 
 	/**
 	 * @var int Bitrix ORM query limit
@@ -173,9 +176,7 @@ trait RestTrait {
 					break;
 
 				case 'navParams':
-					if (empty($value['nPageSize'])) {
-						$value['nPageSize'] = $this->navParams['nPageSize'];
-					}
+					$value = array_merge($this->navParams, $value);
 					break;
 			}
 
