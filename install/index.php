@@ -28,7 +28,7 @@ class goldencode_restify extends CModule
 		$this->MODULE_DESCRIPTION = Loc::getMessage('RESTIFY_MODULE_DESCRIPTION');
 		$this->MODULE_GROUP_RIGHTS = 'N';
 		$this->PARTNER_NAME = Loc::getMessage('RESTIFY_MODULE_PARTNER_NAME');
-		$this->PARTNER_URI = 'https://zolotoykod.ru/';
+		$this->PARTNER_URI = Loc::getMessage('RESTIFY_MODULE_PARTNER_URI');
 
 		$this->INSTALLER_DIR = __DIR__;
 		$this->INSTALL_PATHS = [
@@ -45,6 +45,8 @@ class goldencode_restify extends CModule
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.delivery' => __DIR__ . '/bitrix/components/goldencode/restify.sale.delivery',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.paysystem' => __DIR__ . '/bitrix/components/goldencode/restify.sale.paysystem',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.delivery_paysystem' => __DIR__ . '/bitrix/components/goldencode/restify.sale.delivery_paysystem',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.catalog.smartfilter' => __DIR__ . '/bitrix/components/goldencode/restify.catalog.smartfilter',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/templates/.default/components/bitrix/catalog.smart.filter/restify' => __DIR__ . '/bitrix/templates/.default/components/bitrix/catalog.smart.filter/restify',
 			];
 		}
 	}
