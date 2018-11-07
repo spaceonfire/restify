@@ -41,7 +41,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	public function __call($method, $arguments) {
 		// Throw 404 if method not implemented
 		if (!$this->executor || !method_exists($this->executor, $method)) {
-			$this->notFound();
+			throw new NotFoundHttpException();
 		}
 
 		$this->executor->prepareQuery();
@@ -96,7 +96,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 		$this->arResult = [
 			'error' => [
 				'code' => $errorCode,
-				'message' => $exception->getMessage(),
+				'message' => $exception->getMessage() ?: Loc::getMessage('DEFAULT_ERROR_MESSAGE_' . $errorCode),
 			],
 		];
 
@@ -124,10 +124,6 @@ abstract class RouterComponent extends \CBitrixComponent {
 			'statusCode' => &$this->statusCode,
 		]);
 		$preAnyEvent->send();
-	}
-
-	public function notFound() {
-		throw new NotFoundHttpException(Loc::getMessage('NOT_FOUND_ERROR'));
 	}
 
 	/**
@@ -161,7 +157,11 @@ abstract class RouterComponent extends \CBitrixComponent {
 		Flight::start();
 	}
 
+	/**
+	 * Enable CORS middleware
+	 */
 	public function cors() {
+		// TODO: get values for headers from options
 		$this->route('*', function () {
 			Flight::response()->header('Access-Control-Allow-Origin', '*');
 			return true;
