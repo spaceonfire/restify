@@ -1,0 +1,1405 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: 'Интернет-магазин "Золотой Код"'
+host: 'shop.gc.local'
+basePath: '/api/v1'
+schemes:
+- 'http'
+- 'https'
+tags:
+- name: 'Catalog'
+  description: 'Действия над товарами и разделами магазина'
+- name: 'User'
+  description: 'Действия над аккаунтом пользователя'
+- name: 'Cart'
+  description: 'Работа с корзиной пользователя'
+- name: 'Sale'
+  description: 'Службы доставки и платежные системы интернет-магазина'
+- name: 'Order'
+  description: 'Заказы интернет-магазина'
+paths:
+  /Catalog/:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить список товаров'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив товаров'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/CatalogItem'
+  /Catalog/{id}:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить товаров по Id'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает свойства товара'
+          schema:
+            $ref: '#/definitions/CatalogItem'
+  /Catalog/count:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить количество товаров'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает количество товаров, удовлетворяющих запросу'
+          schema:
+            $ref: '#/definitions/RestifyBitrixCount'
+  /CatalogSection/:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить список разделов каталога'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив разделов каталога'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/CatalogSection'
+  /CatalogSection/{id}:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить раздел каталога по Id'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает свойства раздела каталога'
+          schema:
+            $ref: '#/definitions/CatalogSection'
+  /CatalogSection/count:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить количество разделов каталога'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает количество разделов каталога, удовлетворяющих запросу'
+          schema:
+            $ref: '#/definitions/RestifyBitrixCount'
+  /CatalogFilter/:
+    get:
+      tags:
+      - 'Catalog'
+      summary: 'Получить свойства для генерации фильтра каталога'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Возвращает свойства умного фильтра 1С-Битрикс для генерации формы фильтра'
+          schema:
+            $ref: '#/definitions/RestifyBitrixSmartFilter'
+  /User/:
+    get:
+      tags:
+      - 'User'
+      summary: 'Получить массив пользователей'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив пользователей'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixUser'
+        401:
+          $ref: '#/responses/RestifyUnauthorized'
+  /User/count:
+    get:
+      tags:
+      - 'User'
+      summary: 'Получить количество пользователей'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает количество пользователей, удовлетворяющих запросу'
+          schema:
+            $ref: '#/definitions/RestifyBitrixCount'
+  /User/{id}:
+    get:
+      tags:
+      - 'User'
+      summary: 'Получить пользователя по логину или ID'
+      produces:
+      - 'application/json'
+      parameters:
+      - allOf:
+        - $ref: '#/parameters/RestifyBitrixId'
+        - description: 'ID или логин пользователя. Можно использовать алиас "me" для получения самого пользователя'
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixNavParams'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает свойства пользователя'
+          schema:
+            $ref: '#/definitions/RestifyBitrixUser'
+        401:
+          $ref: '#/responses/RestifyUnauthorized'
+        404:
+          $ref: '#/responses/RestifyNotFound'
+    post:
+      tags:
+      - 'User'
+      summary: 'Обновить данные пользователя'
+      produces:
+      - 'application/json'
+      consumes:
+      - 'application/json'
+      parameters:
+      - allOf:
+        - $ref: '#/parameters/RestifyBitrixId'
+        - description: 'ID или логин пользователя. Можно использовать алиас "me" для получения самого пользователя'
+      - in: 'body'
+        name: 'body'
+        description: 'Новые данные полей пользователя'
+        required: true
+        schema:
+          $ref: '#/definitions/RestifyBitrixUser'
+      responses:
+        200:
+          description: 'Возвращает обновленные свойства пользователя'
+          schema:
+            $ref: '#/definitions/RestifyBitrixUser'
+        401:
+          $ref: '#/responses/RestifyUnauthorized'
+        404:
+          $ref: '#/responses/RestifyNotFound'
+  /User/login:
+    post:
+      tags:
+      - 'User'
+      summary: 'Авторизация пользователя'
+      produces:
+      - 'application/json'
+      consumes:
+      - 'application/json'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            LOGIN:
+              type: 'string'
+            PASSWORD:
+              type: 'string'
+            REMEMBER:
+              $ref: '#/definitions/RestifyBitrixBool'
+      responses:
+        200:
+          description: 'Возвращает свойства пользователя'
+          schema:
+            $ref: '#/definitions/RestifyBitrixUser'
+        401:
+          allOf:
+          - $ref: '#/responses/RestifyUnauthorized'
+          - description: 'Не удалось авторизоваться с передаными данными'
+  /User/logout:
+    get:
+      tags:
+      - 'User'
+      summary: 'Выход из аккаунта'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Возвращает свойства пользователя'
+          schema:
+            $ref: '#/definitions/RestifyBitrixUser'
+  /Cart/:
+    get:
+      tags:
+      - 'Cart'
+      summary: 'Получить список товаров в корзине'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Массив товаров в корзине'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixBasketItem'
+    post:
+      tags:
+      - 'Cart'
+      summary: 'Добавить товар в корзину'
+      consumes:
+      - 'application/json'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            ID:
+              type: 'integer'
+            QUANTITY:
+              type: 'integer'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Сообщение об успешном добавлении товара в корзину'
+          schema:
+            $ref: '#/definitions/RestifyBitrixSuccessMessage'
+  /Cart/{id}:
+    post:
+      tags:
+      - 'Cart'
+      summary: 'Обновить товар в корзине'
+      consumes:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      - in: 'body'
+        name: 'body'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            ID:
+              type: 'integer'
+            QUANTITY:
+              type: 'integer'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Сообщение об успешном обновлении товара в корзине'
+          schema:
+            $ref: '#/definitions/RestifyBitrixSuccessMessage'
+    delete:
+      tags:
+      - 'Cart'
+      summary: 'Удалить товар из корзины'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Сообщение об успешном удалении товара из корзины'
+          schema:
+            $ref: '#/definitions/RestifyBitrixSuccessMessage'
+  /Delivery/:
+    get:
+      tags:
+      - 'Sale'
+      summary: 'Получить список служб доставки'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив служб доставки'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixDelivery'
+  /Delivery/{id}:
+    get:
+      tags:
+      - 'Sale'
+      summary: 'Получить службу доставки по ID или символьному коду'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает свойства службы доставки'
+          schema:
+            $ref: '#/definitions/RestifyBitrixDelivery'
+  /PaySystem/:
+    get:
+      tags:
+      - 'Sale'
+      summary: 'Получить список платежных систем'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив платежных систем'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixPaySystem'
+  /PaySystem/{id}:
+    get:
+      tags:
+      - 'Sale'
+      summary: 'Получить платежную систему по ID или символьному коду'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает свойства платежной системы'
+          schema:
+            $ref: '#/definitions/RestifyBitrixPaySystem'
+  /DeliveryPaySystem/:
+    get:
+      tags:
+      - 'Sale'
+      summary: 'Получить список связей Служба доставки - Платежная система'
+      produces:
+      - 'application/json'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив связей'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixDeliveryPaySystem'
+  /Order/:
+    get:
+      tags:
+      - 'Order'
+      summary: 'Получить массив заказов'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает массив заказов'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixSaleOrder'
+        401:
+          $ref: '#/responses/RestifyUnauthorized'
+    post:
+      tags:
+      - 'Order'
+      summary: 'Создать заказ'
+      consumes:
+      - 'application/json'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        required: true
+        description: 'Свойства заказа (arFields для CSaleOrder::Add)'
+        schema:
+          type: 'object'
+          properties:
+            PERSON_TYPE_ID:
+              type: 'integer'
+            PAY_SYSTEM_ID:
+              type: 'integer'
+            DELIVERY_ID:
+              type: 'integer'
+            USER_DESCRIPTION:
+              type: 'string'
+            ADDITIONAL_INFO:
+              type: 'string'
+            COMMENTS:
+              type: 'string'
+            AFFILIATE_ID:
+              type: 'integer'
+            STORE_ID:
+              type: 'integer'
+      produces:
+      - 'application/json'
+      responses:
+        200:
+          description: 'Сообщение об успешном создании заказа'
+          schema:
+            $ref: '#/definitions/RestifyBitrixSuccessMessage'
+        400:
+          $ref: '#/responses/RestifyBadRequest'
+        401:
+          $ref: '#/responses/RestifyUnauthorized'
+        50x:
+          $ref: '#/responses/RestifyInternalServerError'
+  /Order/{id}:
+    get:
+      tags:
+      - 'Order'
+      summary: 'Получить заказ'
+      parameters:
+      - $ref: '#/parameters/RestifyBitrixId'
+      - $ref: '#/parameters/RestifyBitrixOrder'
+      - $ref: '#/parameters/RestifyBitrixFilter'
+      - $ref: '#/parameters/RestifyBitrixLimit'
+      - $ref: '#/parameters/RestifyBitrixOffset'
+      - $ref: '#/parameters/RestifyBitrixSelect'
+      responses:
+        200:
+          description: 'Возвращает свойства заказа'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/RestifyBitrixSaleOrder'
+        401:
+          $ref: '#/responses/RestifyUnauthorized'
+parameters:
+  RestifyBitrixFilter:
+    in: 'query'
+    name: 'filter'
+    description: 'Фильтр запроса. Объект в виде JSON строки'
+    type: 'string'
+  RestifyBitrixOrder:
+    in: 'query'
+    name: 'order'
+    description: 'Сортировка запроса. Объект в виде JSON строки'
+    type: 'string'
+  RestifyBitrixNavParams:
+    in: 'query'
+    name: 'navParams'
+    description: 'Навигационные параметры запроса. Объект в виде JSON строки'
+    type: 'string'
+  RestifyBitrixSelect:
+    in: 'query'
+    name: 'select'
+    description: 'Поля объекта для получения. Массив строк в виде JSON строки'
+    type: 'string'
+  RestifyBitrixLimit:
+    in: 'query'
+    name: 'limit'
+    type: 'integer'
+  RestifyBitrixOffset:
+    in: 'query'
+    name: 'offset'
+    type: 'integer'
+  RestifyBitrixId:
+    in: 'path'
+    name: 'id'
+    description: 'ID объекта'
+    required: true
+    type: 'string'
+responses:
+  RestifyBadRequest:
+    description: 'Ошибка в параметрах запроса клиента'
+    schema:
+      type: 'object'
+      properties:
+        error:
+          type: 'object'
+          properties:
+            code:
+              type: 'string'
+              enum:
+              - 'BadRequest'
+            message:
+              type: 'string'
+  RestifyNotFound:
+    description: 'Запись с переданным ID не найдена'
+    schema:
+      type: 'object'
+      properties:
+        error:
+          type: 'object'
+          properties:
+            code:
+              type: 'string'
+              enum:
+              - 'NotFound'
+            message:
+              type: 'string'
+  RestifyUnauthorized:
+    description: 'Пользователь не авторизован. Для доступа к данному методу необходимо авторизоваться'
+    schema:
+      type: 'object'
+      properties:
+        error:
+          type: 'object'
+          properties:
+            code:
+              type: 'string'
+              enum:
+              - 'Unauthorized'
+            message:
+              type: 'string'
+  RestifyInternalServerError:
+    description: 'Ошибка сервера'
+    schema:
+      type: 'object'
+      properties:
+        error:
+          type: 'object'
+          properties:
+            code:
+              type: 'string'
+              enum:
+              - 'InternalServerError'
+            message:
+              type: 'string'
+definitions:
+  CatalogItem:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      XML_ID:
+        type: 'string'
+      NAME:
+        type: 'string'
+      CODE:
+        type: 'string'
+      DATE_CREATE:
+        type: 'string'
+        format: 'date-time'
+      IBLOCK_SECTION_ID:
+        type: 'integer'
+      ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      SORT:
+        type: 'integer'
+      PREVIEW_PICTURE:
+        $ref: '#/definitions/RestifyBitrixFile'
+      PREVIEW_TEXT:
+        type: 'string'
+      DETAIL_PICTURE:
+        $ref: '#/definitions/RestifyBitrixFile'
+      DETAIL_TEXT:
+        type: 'string'
+      BASE_PRICE:
+        $ref: '#/definitions/RestifyBitrixProductPrice'
+      CAN_BUY:
+        type: 'boolean'
+      PROPERTY_BRAND_VALUE:
+        type: 'string'
+      PROPERTY_TAGS_VALUE:
+        type: 'array'
+        items:
+          type: 'string'
+  CatalogSection:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      TIMESTAMP_X:
+        type: 'string'
+        format: 'date-time'
+      MODIFIED_BY:
+        type: 'integer'
+      DATE_CREATE:
+        type: 'string'
+        format: 'date-time'
+      CREATED_BY:
+        type: 'integer'
+      IBLOCK_ID:
+        type: 'integer'
+      IBLOCK_SECTION_ID:
+        type: 'integer'
+      ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      GLOBAL_ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      SORT:
+        type: 'integer'
+      NAME:
+        type: 'string'
+      PICTURE:
+        $ref: '#/definitions/RestifyBitrixFile'
+      DETAIL_PICTURE:
+        $ref: '#/definitions/RestifyBitrixFile'
+      LEFT_MARGIN:
+        type: 'integer'
+      RIGHT_MARGIN:
+        type: 'integer'
+      DEPTH_LEVEL:
+        type: 'integer'
+      DESCRIPTION:
+        type: 'string'
+      CODE:
+        type: 'string'
+      XML_ID:
+        type: 'integer'
+      ELEMENTS_COUNT:
+        type: 'integer'
+  RestifyBitrixFile:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      SRC:
+        type: 'string'
+      HEIGHT:
+        type: 'integer'
+      WIDTH:
+        type: 'integer'
+      FILE_SIZE:
+        type: 'integer'
+      CONTENT_TYPE:
+        type: 'string'
+      ORIGINAL_NAME:
+        type: 'string'
+      DESCRIPTION:
+        type: 'string'
+  RestifyBitrixProductPrice:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      PRODUCT_ID:
+        type: 'integer'
+      CATALOG_GROUP_ID:
+        type: 'integer'
+      CATALOG_GROUP_NAME:
+        type: 'string'
+      PRICE:
+        type: 'number'
+      CURRENCY:
+        type: 'string'
+      TIMESTAMP_X:
+        type: 'string'
+      BASE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      PRODUCT_QUANTITY_TRACE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      PRODUCT_CAN_BUY_ZERO:
+        $ref: '#/definitions/RestifyBitrixBool'
+      PRODUCT_NEGATIVE_AMOUNT_TRACE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      QUANTITY_FROM:
+        type: 'integer'
+      QUANTITY_TO:
+        type: 'integer'
+  RestifyBitrixBool:
+    type: 'string'
+    enum:
+    - 'Y'
+    - 'N'
+  RestifyBitrixCount:
+    type: 'object'
+    properties:
+      count:
+        type: 'integer'
+  RestifyBitrixSmartFilter:
+    type: 'object'
+    properties:
+      FACET_FILTER:
+        type: 'boolean'
+      COMBO:
+        type: 'object'
+      PRICES:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            ID:
+              type: 'integer'
+            CODE:
+              type: 'string'
+            SORT:
+              type: 'integer'
+            BASE:
+              $ref: '#/definitions/RestifyBitrixBool'
+            XML_ID:
+              type: 'string'
+            TITLE:
+              type: 'string'
+            SELECT:
+              type: 'string'
+            CAN_VIEW:
+              type: 'boolean'
+            CAN_BUY:
+              type: 'boolean'
+      PROPERTY_COUNT:
+        type: 'integer'
+      PROPERTY_ID_LIST:
+        type: 'array'
+        items:
+          type: 'integer'
+      ITEMS:
+        type: 'object'
+        additionalProperties:
+          type: 'object'
+          properties:
+            ID:
+              type: 'integer'
+            IBLOCK_ID:
+              type: 'integer'
+            CODE:
+              type: 'string'
+            NAME:
+              type: 'string'
+            PROPERTY_TYPE:
+              type: 'string'
+              enum:
+              - 'S'
+              - 'N'
+              - 'L'
+              - 'F'
+              - 'G'
+              - 'E'
+            USER_TYPE:
+              type: 'string'
+              enum:
+              - 'UserID'
+              - 'DateTime'
+              - 'EList'
+              - 'FileMan'
+              - 'map_yandex'
+              - 'HTML'
+              - 'map_google'
+              - 'ElementXmlID'
+              - 'Sequence'
+              - 'EAutocomplete'
+              - 'SKU'
+              - 'video'
+              - 'TopicID'
+            DISPLAY_TYPE:
+              type: 'string'
+              enum:
+              - 'A'
+              - 'B'
+              - 'F'
+              - 'G'
+              - 'H'
+              - 'K'
+              - 'P'
+              - 'R'
+            DISPLAY_EXPANDED:
+              $ref: '#/definitions/RestifyBitrixBool'
+            FILTER_HINT:
+              type: 'string'
+            VALUES:
+              type: 'object'
+      FORM_ACTION:
+        type: 'string'
+      HIDDEN:
+        type: 'array'
+        items:
+          type: 'object'
+      FILTER:
+        type: 'object'
+  RestifyBitrixUser:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      LOGIN:
+        type: 'string'
+      PASSWORD:
+        type: 'string'
+      EMAIL:
+        type: 'string'
+      ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_REGISTER:
+        type: 'string'
+        format: 'date-time'
+      LAST_LOGIN:
+        type: 'string'
+        format: 'date-time'
+      TIMESTAMP_X:
+        type: 'string'
+        format: 'date-time'
+      NAME:
+        type: 'string'
+      LAST_NAME:
+        type: 'string'
+      SECOND_NAME:
+        type: 'string'
+      TITLE:
+        type: 'string'
+      EXTERNAL_AUTH_ID:
+        type: 'string'
+      XML_ID:
+        type: 'string'
+      LID:
+        type: 'string'
+      LANGUAGE_ID:
+        type: 'string'
+      TIME_ZONE_OFFSET:
+        type: 'integer'
+      PERSONAL_PROFESSION:
+        type: 'string'
+      PERSONAL_PHONE:
+        type: 'string'
+      PERSONAL_MOBILE:
+        type: 'string'
+      PERSONAL_WWW:
+        type: 'string'
+      PERSONAL_ICQ:
+        type: 'string'
+      PERSONAL_FAX:
+        type: 'string'
+      PERSONAL_PAGER:
+        type: 'string'
+      PERSONAL_STREET:
+        type: 'string'
+      PERSONAL_MAILBOX:
+        type: 'string'
+      PERSONAL_CITY:
+        type: 'string'
+      PERSONAL_STATE:
+        type: 'string'
+      PERSONAL_ZIP:
+        type: 'string'
+      PERSONAL_COUNTRY:
+        type: 'string'
+      PERSONAL_BIRTHDAY:
+        type: 'string'
+        format: 'date-time'
+      PERSONAL_GENDER:
+        type: 'string'
+        enum:
+        - 'M'
+        - 'F'
+      PERSONAL_PHOTO:
+        $ref: '#/definitions/RestifyBitrixFile'
+      PERSONAL_NOTES:
+        type: 'string'
+      WORK_COMPANY:
+        type: 'string'
+      WORK_DEPARTMENT:
+        type: 'string'
+      WORK_PHONE:
+        type: 'string'
+      WORK_POSITION:
+        type: 'string'
+      WORK_WWW:
+        type: 'string'
+      WORK_FAX:
+        type: 'string'
+      WORK_PAGER:
+        type: 'string'
+      WORK_STREET:
+        type: 'string'
+      WORK_MAILBOX:
+        type: 'string'
+      WORK_CITY:
+        type: 'string'
+      WORK_STATE:
+        type: 'string'
+      WORK_ZIP:
+        type: 'string'
+      WORK_COUNTRY:
+        type: 'string'
+      WORK_PROFILE:
+        type: 'string'
+      WORK_LOGO:
+        $ref: '#/definitions/RestifyBitrixFile'
+      WORK_NOTES:
+        type: 'string'
+      SHORT_NAME:
+        type: 'string'
+      IS_ONLINE:
+        $ref: '#/definitions/RestifyBitrixBool'
+  RestifyBitrixBasketItem:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      LID:
+        type: 'string'
+      FUSER_ID:
+        type: 'integer'
+      ORDER_ID:
+        type: 'integer'
+      PRODUCT_ID:
+        type: 'integer'
+      PRODUCT_PRICE_ID:
+        type: 'integer'
+      NAME:
+        type: 'string'
+      PRICE:
+        type: 'number'
+      CURRENCY:
+        type: 'string'
+      BASE_PRICE:
+        type: 'number'
+      VAT_INCLUDED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_INSERT:
+        type: 'string'
+        format: 'date-time'
+      DATE_UPDATE:
+        type: 'string'
+        format: 'date-time'
+      WEIGHT:
+        type: 'number'
+      QUANTITY:
+        type: 'integer'
+      DELAY:
+        $ref: '#/definitions/RestifyBitrixBool'
+      CAN_BUY:
+        $ref: '#/definitions/RestifyBitrixBool'
+      MODULE:
+        type: 'string'
+      PRODUCT_PROVIDER_CLASS:
+        type: 'string'
+      NOTES:
+        type: 'string'
+      DETAIL_PAGE_URL:
+        type: 'string'
+      DISCOUNT_PRICE:
+        type: 'number'
+      CATALOG_XML_ID:
+        type: 'string'
+      PRODUCT_XML_ID:
+        type: 'string'
+      DISCOUNT_NAME:
+        type: 'string'
+      DISCOUNT_VALUE:
+        type: 'string'
+      DISCOUNT_COUPON:
+        type: 'string'
+      VAT_RATE:
+        type: 'number'
+      SUBSCRIBE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      RESERVED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      RESERVE_QUANTITY:
+        type: 'integer'
+      BARCODE_MULTI:
+        $ref: '#/definitions/RestifyBitrixBool'
+      CUSTOM_PRICE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DIMENSIONS:
+        type: 'string'
+      TYPE:
+        type: 'string'
+      SET_PARENT_ID:
+        type: 'string'
+      MEASURE_CODE:
+        type: 'string'
+      MEASURE_NAME:
+        type: 'string'
+      CALLBACK_FUNC:
+        type: 'string'
+      ORDER_CALLBACK_FUNC:
+        type: 'string'
+      CANCEL_CALLBACK_FUNC:
+        type: 'string'
+      PAY_CALLBACK_FUNC:
+        type: 'string'
+      RECOMMENDATION:
+        type: 'string'
+      SORT:
+        type: 'number'
+      PRODUCT:
+        $ref: '#/definitions/RestifyCatalogProduct'
+      ELEMENT:
+        $ref: '#/definitions/RestifyD7IblockElement'
+  RestifyCatalogProduct:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      TIMESTAMP_X:
+        type: 'string'
+      QUANTITY:
+        type: 'integer'
+      PURCHASING_PRICE:
+        type: 'number'
+      PURCHASING_CURRENCY:
+        type: 'string'
+      WEIGHT:
+        type: 'number'
+  RestifyD7IblockElement:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      TIMESTAMP_X:
+        type: 'string'
+        format: 'date-time'
+      MODIFIED_BY:
+        type: 'integer'
+      DATE_CREATE:
+        type: 'string'
+        format: 'date-time'
+      CREATED_BY:
+        type: 'integer'
+      IBLOCK_ID:
+        type: 'integer'
+      IBLOCK_SECTION_ID:
+        type: 'integer'
+      ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      ACTIVE_FROM:
+        type: 'string'
+        format: 'date-time'
+      ACTIVE_TO:
+        type: 'string'
+        format: 'date-time'
+      SORT:
+        type: 'integer'
+      NAME:
+        type: 'string'
+      PREVIEW_PICTURE:
+        $ref: '#/definitions/RestifyBitrixFile'
+      PREVIEW_TEXT:
+        type: 'string'
+      PREVIEW_TEXT_TYPE:
+        type: 'string'
+      DETAIL_PICTURE:
+        $ref: '#/definitions/RestifyBitrixFile'
+      DETAIL_TEXT:
+        type: 'string'
+      DETAIL_TEXT_TYPE:
+        type: 'string'
+      SEARCHABLE_CONTENT:
+        type: 'string'
+      IN_SECTIONS:
+        $ref: '#/definitions/RestifyBitrixBool'
+      XML_ID:
+        type: 'string'
+      CODE:
+        type: 'string'
+      SHOW_COUNTER:
+        type: 'integer'
+      SHOW_COUNTER_START:
+        type: 'string'
+        format: 'date-time'
+  RestifyBitrixSuccessMessage:
+    type: 'object'
+    properties:
+      result:
+        type: 'string'
+        enum:
+          - 'ok'
+      message:
+        type: 'string'
+  RestifyBitrixDelivery:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      CODE:
+        type: 'string'
+      PARENT_ID:
+        type: 'integer'
+      NAME:
+        type: 'string'
+      ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DESCRIPTION:
+        type: 'string'
+      SORT:
+        type: 'integer'
+      LOGOTIP:
+        $ref: '#/definitions/RestifyBitrixFile'
+      CONFIG:
+        type: 'object'
+      CLASS_NAME:
+        type: 'string'
+      CURRENCY:
+        type: 'string'
+      ALLOW_EDIT_SHIPMENT:
+        $ref: '#/definitions/RestifyBitrixBool'
+      PARENT:
+        $ref: '#/definitions/RestifyBitrixDelivery'
+  RestifyBitrixPaySystem:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      PAY_SYSTEM_ID:
+        type: 'integer'
+      PERSON_TYPE_ID:
+        type: 'integer'
+      NAME:
+        type: 'string'
+      PSA_NAME:
+        type: 'string'
+      CODE:
+        type: 'string'
+      SORT:
+        type: 'integer'
+      ACTION_FILE:
+        type: 'string'
+      RESULT_FILE:
+        type: 'string'
+      DESCRIPTION:
+        type: 'string'
+      NEW_WINDOW:
+        $ref: '#/definitions/RestifyBitrixBool'
+      PARAMS:
+        type: 'string'
+      TARIF:
+        type: 'string'
+      PS_MODE:
+        type: 'string'
+      HAVE_PAYMENT:
+        $ref: '#/definitions/RestifyBitrixBool'
+      HAVE_ACTION:
+        $ref: '#/definitions/RestifyBitrixBool'
+      HAVE_RESULT:
+        $ref: '#/definitions/RestifyBitrixBool'
+      HAVE_PREPAY:
+        $ref: '#/definitions/RestifyBitrixBool'
+      HAVE_PRICE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      HAVE_RESULT_RECEIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      ENCODING:
+        type: 'string'
+      LOGOTIP:
+        $ref: '#/definitions/RestifyBitrixFile'
+      ACTIVE:
+        $ref: '#/definitions/RestifyBitrixBool'
+      ALLOW_EDIT_PAYMENT:
+        $ref: '#/definitions/RestifyBitrixBool'
+      IS_CASH:
+        $ref: '#/definitions/RestifyBitrixBool'
+      AUTO_CHANGE_1C:
+        $ref: '#/definitions/RestifyBitrixBool'
+      CAN_PRINT_CHECK:
+        $ref: '#/definitions/RestifyBitrixBool'
+  RestifyBitrixDeliveryPaySystem:
+    type: 'object'
+    properties:
+      DELIVERY_ID:
+        type: 'integer'
+      LINK_DIRECTION:
+        type: 'string'
+      PAYSYSTEM_ID:
+        type: 'integer'
+      DELIVERY:
+        $ref: '#/definitions/RestifyBitrixDelivery'
+      PAYSYSTEM:
+        $ref: '#/definitions/RestifyBitrixPaySystem'
+  RestifyBitrixSaleOrder:
+    type: 'object'
+    properties:
+      ID:
+        type: 'integer'
+      LID:
+        type: 'string'
+      ACCOUNT_NUMBER:
+        type: 'string'
+      TRACKING_NUMBER:
+        type: 'string'
+      PAY_SYSTEM_ID:
+        type: 'integer'
+      DELIVERY_ID:
+        type: 'integer'
+      DATE_INSERT:
+        type: 'string'
+        format: 'date-time'
+      DATE_UPDATE:
+        type: 'string'
+        format: 'date-time'
+      PERSON_TYPE_ID:
+        type: 'integer'
+      USER_ID:
+        type: 'integer'
+      PAYED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_PAYED:
+        type: 'string'
+        format: 'date-time'
+      EMP_PAYED_ID:
+        type: 'integer'
+      DEDUCTED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_DEDUCTED:
+        type: 'string'
+        format: 'date-time'
+      EMP_DEDUCTED_ID:
+        type: 'integer'
+      REASON_UNDO_DEDUCTED:
+        type: 'string'
+      STATUS_ID:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_STATUS:
+        type: 'string'
+        format: 'date-time'
+      EMP_STATUS_ID:
+        type: 'integer'
+      MARKED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_MARKED:
+        type: 'string'
+        format: 'date-time'
+      EMP_MARKED_ID:
+        type: 'integer'
+      REASON_MARKED:
+        type: 'string'
+      PRICE_DELIVERY:
+        type: 'number'
+      ALLOW_DELIVERY:
+        $ref: '#/definitions/RestifyBitrixBool'
+      DATE_ALLOW_DELIVERY:
+        type: 'string'
+        format: 'date-time'
+      EMP_ALLOW_DELIVERY_ID:
+        type: 'integer'
+      RESERVED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      PRICE:
+        type: 'number'
+      CURRENCY:
+        type: 'string'
+      DISCOUNT_VALUE:
+        type: 'number'
+      TAX_VALUE:
+        type: 'number'
+      SUM_PAID:
+        type: 'number'
+      USER_DESCRIPTION:
+        type: 'string'
+      PAY_VOUCHER_NUM:
+        type: 'number'
+      PAY_VOUCHER_DATE:
+        type: 'string'
+        format: 'date-time'
+      ADDITIONAL_INFO:
+        type: 'string'
+      COMMENTS:
+        type: 'string'
+      COMPANY_ID:
+        type: 'integer'
+      CREATED_BY:
+        type: 'integer'
+      RESPONSIBLE_ID:
+        type: 'integer'
+      STAT_GID:
+        type: 'string'
+      DATE_PAY_BEFORE:
+        type: 'string'
+        format: 'date-time'
+      DATE_BILL:
+        type: 'string'
+        format: 'date-time'
+      IS_RECURRING:
+        $ref: '#/definitions/RestifyBitrixBool'
+      RECURRING_ID:
+        type: 'integer'
+      LOCKED_BY:
+        type: 'integer'
+      DATE_LOCK:
+        type: 'string'
+        format: 'date-time'
+      RECOUNT_FLAG:
+        $ref: '#/definitions/RestifyBitrixBool'
+      AFFILIATE_ID:
+        type: 'integer'
+      DELIVERY_DOC_NUM:
+        type: 'string'
+      DELIVERY_DOC_DATE:
+        type: 'string'
+        format: 'date-time'
+      UPDATED_1C:
+        $ref: '#/definitions/RestifyBitrixBool'
+      ORDER_TOPIC:
+        type: 'string'
+      XML_ID:
+        type: 'string'
+      ID_1C:
+        type: 'string'
+      VERSION_1C:
+        type: 'string'
+      VERSION:
+        type: 'integer'
+      EXTERNAL_ORDER:
+        $ref: '#/definitions/RestifyBitrixBool'
+      STORE_ID:
+        type: 'integer'
+      CANCELED:
+        $ref: '#/definitions/RestifyBitrixBool'
+      EMP_CANCELED_ID:
+        type: 'integer'
+      DATE_CANCELED:
+        type: 'string'
+        format: 'date-time'
+      REASON_CANCELED:
+        type: 'string'
+      BX_USER_ID:
+        type: 'integer'
+      RUNNING:
+        $ref: '#/definitions/RestifyBitrixBool'
+      BASKET:
+        $ref: '#/definitions/RestifyBitrixBasketItem'
