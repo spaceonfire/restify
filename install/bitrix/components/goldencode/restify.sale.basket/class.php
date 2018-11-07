@@ -14,6 +14,7 @@ class RestifySaleBasketComponent extends RouterComponent {
 	public function executeComponent() {
 		$executor = new SaleBasketRest($this->arParams);
 		$this->setExecutor($executor);
+		$this->cors();
 		$this->route('GET /', [$this, 'read']);
 		$this->route('POST /', [$this, 'update']);
 		$this->route('POST /@id', [$this, 'update']);

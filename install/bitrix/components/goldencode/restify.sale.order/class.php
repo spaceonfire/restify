@@ -14,6 +14,7 @@ class RestifySaleOrderComponent extends RouterComponent {
 	public function executeComponent() {
 		$executor = new SaleOrderRest($this->arParams);
 		$this->setExecutor($executor);
+		$this->cors();
 		$this->route('GET /', [$this, 'readMany']);
 		$this->route('POST /', [$this, 'create']);
 		$this->route('GET /@id:[0-9]+', [$this, 'readOne']);

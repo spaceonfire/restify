@@ -14,6 +14,7 @@ class RestifySaleDeliveryPaySystemComponent extends RouterComponent {
 	public function executeComponent() {
 		$executor = new SaleDeliveryPaySystemRest($this->arParams);
 		$this->setExecutor($executor);
+		$this->cors();
 		$this->route('GET /', [$this, 'readMany']);
 		$this->start();
 	}

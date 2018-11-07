@@ -109,9 +109,6 @@ class UserRest {
 
 		$id = $this->getId($id);
 
-		unset($this->body['ID']);
-		unset($this->body['IBLOCK_ID']);
-
 		global $USER;
 		if (!$USER->Update($id, $this->body)) {
 			throw new BadRequestHttpException($USER->LAST_ERROR);

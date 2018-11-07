@@ -14,6 +14,7 @@ class RestifySaleDeliveryComponent extends RouterComponent {
 	public function executeComponent() {
 		$executor = new SaleDeliveryServiceRest($this->arParams);
 		$this->setExecutor($executor);
+		$this->cors();
 		$this->route('GET /', [$this, 'readMany']);
 		$this->route('GET /@id', [$this, 'readOne']);
 		$this->start();

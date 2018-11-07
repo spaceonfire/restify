@@ -107,6 +107,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	}
 
 	public function executeComponent() {
+		$this->cors();
 		$this->route('POST /', [$this, 'create']);
 		$this->route('GET /', [$this, 'readMany']);
 		$this->route('GET /count', [$this, 'count']);
@@ -160,5 +161,25 @@ abstract class RouterComponent extends \CBitrixComponent {
 	 */
 	public function start() {
 		Flight::start();
+	}
+
+	public function cors() {
+		$this->route('*', function () {
+			Flight::response()->header('Access-Control-Allow-Origin', '*');
+			return true;
+		});
+
+		$this->route('OPTIONS *', function () {
+			Flight::response()
+				->header([
+					'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+					'Access-Control-Max-Age' => '1728000',
+					'Access-Control-Allow-Headers' => '*',
+					'Content-Length' => '0',
+				])
+				->status(204)
+				->send();
+			die();
+		});
 	}
 }

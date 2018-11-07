@@ -14,6 +14,7 @@ class RestifyUserComponent extends RouterComponent {
 	public function executeComponent() {
 		$executor = new UserRest($this->arParams);
 		$this->setExecutor($executor);
+		$this->cors();
 		$this->route('POST /', [$this, 'create']);
 		$this->route('GET /', [$this, 'readMany']);
 		$this->route('GET /count', [$this, 'count']);
