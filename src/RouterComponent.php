@@ -88,6 +88,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 		} catch (HttpException $_exception) {
 			$errorCode = str_replace('HttpException', '', $errorCode);
 			$this->statusCode = $exception->getStatusCode();
+			Flight::response()->header($exception->getHeaders());
 		} catch (Exception $_exception) {
 			$this->statusCode = 500;
 		}
@@ -98,9 +99,6 @@ abstract class RouterComponent extends \CBitrixComponent {
 				'message' => $exception->getMessage(),
 			],
 		];
-
-		// TODO: send custom headers
-		// $headers = $exception->getHeaders();
 
 		$this->json($this->arResult);
 		// TODO: optionally log rest api errors
