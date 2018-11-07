@@ -14,7 +14,7 @@ use Emonkak\HttpException\NotFoundHttpException;
 use Emonkak\HttpException\UnauthorizedHttpException;
 use Exception;
 
-class UserRest {
+class UserRest implements IExecutor {
 	use RestTrait {
 		buildSchema as private _buildSchema;
 	}

@@ -17,7 +17,7 @@ use Emonkak\HttpException\NotFoundHttpException;
 use Emonkak\HttpException\UnauthorizedHttpException;
 use Exception;
 
-class SaleOrderRest {
+class SaleOrderRest implements IExecutor {
 	use RestTrait;
 
 	private $entity = 'Bitrix\Sale\Internals\OrderTable';

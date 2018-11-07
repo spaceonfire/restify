@@ -6,7 +6,7 @@ use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
-class SaleDeliveryServiceRest {
+class SaleDeliveryServiceRest implements IExecutor {
 	use RestTrait;
 
 	private $entity = 'Bitrix\Sale\Delivery\Services\Table';

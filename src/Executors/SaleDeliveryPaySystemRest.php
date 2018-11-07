@@ -5,7 +5,7 @@ namespace goldencode\Bitrix\Restify\Executors;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Exception;
 
-class SaleDeliveryPaySystemRest {
+class SaleDeliveryPaySystemRest implements IExecutor {
 	use RestTrait;
 
 	private $entity = 'Bitrix\Sale\Internals\DeliveryPaySystemTable';

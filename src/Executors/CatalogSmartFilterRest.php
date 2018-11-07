@@ -6,7 +6,7 @@ use Bitrix\Main\Localization\Loc;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Exception;
 
-class CatalogSmartFilterRest {
+class CatalogSmartFilterRest implements IExecutor {
 	use RestTrait;
 
 	/**

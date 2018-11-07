@@ -6,7 +6,7 @@ use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
-class SalePaySystemRest {
+class SalePaySystemRest implements IExecutor {
 	use RestTrait;
 
 	private $entity = 'Bitrix\Sale\Internals\PaySystemActionTable';

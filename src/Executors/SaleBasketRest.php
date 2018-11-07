@@ -9,7 +9,7 @@ use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
-class SaleBasketRest {
+class SaleBasketRest implements IExecutor {
 	use RestTrait;
 
 	private $entity = 'Bitrix\Sale\Internals\BasketTable';

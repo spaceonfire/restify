@@ -16,7 +16,7 @@ use Emonkak\HttpException\InternalServerErrorHttpException;
 use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
-class IblockElementRest {
+class IblockElementRest implements IExecutor {
 	use RestTrait {
 		prepareQuery as private _prepareQuery;
 		buildSchema as private _buildSchema;

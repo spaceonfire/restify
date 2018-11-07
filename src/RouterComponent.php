@@ -23,7 +23,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	private $statusCode = 200;
 
 	/**
-	 * @var object Executor object
+	 * @var Executors\IExecutor Executor object
 	 */
 	private $executor;
 
@@ -140,7 +140,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 	}
 
 	/**
-	 * @param object $executor
+	 * @param Executors\IExecutor $executor
 	 */
 	public function setExecutor($executor) {
 		$this->executor = $executor;
