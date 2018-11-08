@@ -21,7 +21,7 @@ class CatalogSmartFilterRest implements IExecutor {
 
 		if (!$options['IBLOCK_ID']) {
 			throw new InternalServerErrorHttpException(Loc::getMessage('REQUIRED_PROPERTY', [
-				'#PROPERTY#' => 'iblockId',
+				'#PROPERTY#' => 'IBLOCK_ID',
 			]));
 		}
 	}

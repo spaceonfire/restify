@@ -19,6 +19,11 @@ $MESS['SALE_ORDER_CREATE_BASKET_EMPTY'] = 'Корзина пуста';
 $MESS['SALE_ORDER_CREATE_ERROR'] = 'Не удалось создать заказ';
 $MESS['SALE_ORDER_CREATE_SUCCESS'] = 'Заказ №#ORDER_ID# успешно создан';
 
+$MESS['CATALOG_COMPARE_ADD_SUCCESS'] = 'Элемент добавлен к сравнению';
+$MESS['CATALOG_COMPARE_DELETE_SUCCESS'] = 'Элемент удален из сравнения';
+$MESS['CATALOG_COMPARE_CLEAR_SUCCESS'] = 'Список сравнения очищен';
+$MESS['CATALOG_COMPARE_EMPTY'] = 'Список сравнения "#COMPARE_NAME#" пуст';
+
 $MESS['DEFAULT_ERROR_MESSAGE_400'] = 'Bad Request';
 $MESS['DEFAULT_ERROR_MESSAGE_401'] = 'Unauthorized';
 $MESS['DEFAULT_ERROR_MESSAGE_402'] = 'Payment Required';

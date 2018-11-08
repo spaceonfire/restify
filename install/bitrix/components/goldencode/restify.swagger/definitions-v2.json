@@ -35,6 +35,12 @@
       "name": "offset",
       "type": "integer"
     },
+    "RestifyBitrixCatalogCompareName": {
+      "in": "query",
+      "name": "name",
+      "description": "Код списка сравнения",
+      "type": "string"
+    },
     "RestifyBitrixId": {
       "in": "path",
       "name": "id",
@@ -1288,6 +1294,72 @@
         },
         "BASKET": {
           "$ref": "#/definitions/RestifyBitrixBasketItem"
+        }
+      }
+    },
+    "RestifyBitrixCatalogCompareResult": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RestifyBitrixIblockItem"
+          }
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "type": "integer"
+              },
+              "NAME": {
+                "type": "string"
+              },
+              "CODE": {
+                "type": "string"
+              },
+              "PROPERTY_TYPE": {
+                "type": "string",
+                "enum": [
+                  "S",
+                  "N",
+                  "L",
+                  "F",
+                  "G",
+                  "E"
+                ]
+              },
+              "MULTIPLE": {
+                "$ref": "#/definitions/RestifyBitrixBool"
+              },
+              "LINK_IBLOCK_ID": {
+                "type": "integer"
+              },
+              "USER_TYPE": {
+                "type": "string",
+                "enum": [
+                  "UserID",
+                  "DateTime",
+                  "EList",
+                  "FileMan",
+                  "map_yandex",
+                  "HTML",
+                  "map_google",
+                  "ElementXmlID",
+                  "Sequence",
+                  "EAutocomplete",
+                  "SKU",
+                  "video",
+                  "TopicID"
+                ]
+              },
+              "USER_TYPE_SETTINGS": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }

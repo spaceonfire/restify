@@ -96,7 +96,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 		$this->arResult = [
 			'error' => [
 				'code' => $errorCode,
-				'message' => $exception->getMessage() ?: Loc::getMessage('DEFAULT_ERROR_MESSAGE_' . $errorCode),
+				'message' => $exception->getMessage() ?: Loc::getMessage('DEFAULT_ERROR_MESSAGE_' . $this->statusCode),
 			],
 		];
 
@@ -179,5 +179,12 @@ abstract class RouterComponent extends \CBitrixComponent {
 				->send();
 			die();
 		});
+	}
+
+	/**
+	 * @param int $jsonOptions
+	 */
+	public function setJsonOptions($jsonOptions) {
+		$this->jsonOptions = $jsonOptions;
 	}
 }

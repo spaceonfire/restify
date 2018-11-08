@@ -48,6 +48,7 @@ class goldencode_restify extends CModule
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.paysystem' => __DIR__ . '/bitrix/components/goldencode/restify.sale.paysystem',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.delivery_paysystem' => __DIR__ . '/bitrix/components/goldencode/restify.sale.delivery_paysystem',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.catalog.smartfilter' => __DIR__ . '/bitrix/components/goldencode/restify.catalog.smartfilter',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.catalog.compare' => __DIR__ . '/bitrix/components/goldencode/restify.catalog.compare',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/templates/.default/components/bitrix/catalog.smart.filter/restify' => __DIR__ . '/bitrix/templates/.default/components/bitrix/catalog.smart.filter/restify',
 			];
 		}
