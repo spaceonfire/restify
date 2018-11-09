@@ -19,7 +19,7 @@ class RestifyCustomComponent extends RouterComponent {
 		}
 
 		$this->setExecutor($this->arParams['executor']);
-		if ($this->arParams['ENABLE_CORS']) {
+		if ($this->arParams['enableCORS']) {
 			$this->cors();
 		}
 		foreach ($this->arParams['routes'] as $pattern => $method) {
