@@ -1,12 +1,12 @@
 <?php
 
-namespace goldencode\Bitrix\Restify;
+namespace spaceonfire\Restify;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
-use goldencode\Bitrix\Restify\Executors\SaleOrderRest;
+use spaceonfire\Restify\Executors\SaleOrderRest;
 
-if (!Loader::includeModule('goldencode.restify')) return false;
+if (!Loader::includeModule('spaceonfire.restify')) return false;
 
 Loc::loadLanguageFile(__FILE__);
 

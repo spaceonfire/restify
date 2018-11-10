@@ -7,9 +7,9 @@ use spaceonfire\BMF\ModuleInstaller;
 
 Loc::loadMessages(__FILE__);
 
-class goldencode_restify extends CModule
+class spaceonfire_restify extends CModule
 {
-	var $MODULE_ID = 'goldencode.restify';
+	var $MODULE_ID = 'spaceonfire.restify';
 
 	use ModuleInstaller;
 
@@ -23,7 +23,7 @@ class goldencode_restify extends CModule
 			$this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
 		}
 
-		$this->MODULE_ID = 'goldencode.restify';
+		$this->MODULE_ID = 'spaceonfire.restify';
 		$this->MODULE_NAME = Loc::getMessage('RESTIFY_MODULE_NAME');
 		$this->MODULE_DESCRIPTION = Loc::getMessage('RESTIFY_MODULE_DESCRIPTION');
 		$this->MODULE_GROUP_RIGHTS = 'N';
@@ -37,28 +37,28 @@ class goldencode_restify extends CModule
 
 		if ($this->isDevelopmentMode()) {
 			$this->DEV_LINKS = [
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.swagger' => __DIR__ . '/bitrix/components/goldencode/restify.swagger',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.custom' => __DIR__ . '/bitrix/components/goldencode/restify.custom',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.main.user' => __DIR__ . '/bitrix/components/goldencode/restify.main.user',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock.element' => __DIR__ . '/bitrix/components/goldencode/restify.iblock.element',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.iblock.section' => __DIR__ . '/bitrix/components/goldencode/restify.iblock.section',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.basket' => __DIR__ . '/bitrix/components/goldencode/restify.sale.basket',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.order' => __DIR__ . '/bitrix/components/goldencode/restify.sale.order',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.delivery' => __DIR__ . '/bitrix/components/goldencode/restify.sale.delivery',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.paysystem' => __DIR__ . '/bitrix/components/goldencode/restify.sale.paysystem',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.sale.delivery_paysystem' => __DIR__ . '/bitrix/components/goldencode/restify.sale.delivery_paysystem',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.catalog.smartfilter' => __DIR__ . '/bitrix/components/goldencode/restify.catalog.smartfilter',
-				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/goldencode/restify.catalog.compare' => __DIR__ . '/bitrix/components/goldencode/restify.catalog.compare',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.swagger' => __DIR__ . '/bitrix/components/spaceonfire/restify.swagger',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.custom' => __DIR__ . '/bitrix/components/spaceonfire/restify.custom',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.main.user' => __DIR__ . '/bitrix/components/spaceonfire/restify.main.user',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.iblock.element' => __DIR__ . '/bitrix/components/spaceonfire/restify.iblock.element',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.iblock.section' => __DIR__ . '/bitrix/components/spaceonfire/restify.iblock.section',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.sale.basket' => __DIR__ . '/bitrix/components/spaceonfire/restify.sale.basket',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.sale.order' => __DIR__ . '/bitrix/components/spaceonfire/restify.sale.order',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.sale.delivery' => __DIR__ . '/bitrix/components/spaceonfire/restify.sale.delivery',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.sale.paysystem' => __DIR__ . '/bitrix/components/spaceonfire/restify.sale.paysystem',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.sale.delivery_paysystem' => __DIR__ . '/bitrix/components/spaceonfire/restify.sale.delivery_paysystem',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.catalog.smartfilter' => __DIR__ . '/bitrix/components/spaceonfire/restify.catalog.smartfilter',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.catalog.compare' => __DIR__ . '/bitrix/components/spaceonfire/restify.catalog.compare',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/templates/.default/components/bitrix/catalog.smart.filter/restify' => __DIR__ . '/bitrix/templates/.default/components/bitrix/catalog.smart.filter/restify',
 			];
 		}
 	}
 
 	public function installDB() {
-		RegisterModuleDependences('main', 'OnEventLogGetAuditTypes', $this->MODULE_ID, 'goldencode\Bitrix\Restify\EventLogAuditType', 'registerAuditTypes');
+		RegisterModuleDependences('main', 'OnEventLogGetAuditTypes', $this->MODULE_ID, 'spaceonfire\Restify\EventLogAuditType', 'registerAuditTypes');
 	}
 
 	public function uninstallDB() {
-		UnRegisterModuleDependences('main', 'OnEventLogGetAuditTypes', $this->MODULE_ID, 'goldencode\Bitrix\Restify\EventLogAuditType', 'registerAuditTypes');
+		UnRegisterModuleDependences('main', 'OnEventLogGetAuditTypes', $this->MODULE_ID, 'spaceonfire\Restify\EventLogAuditType', 'registerAuditTypes');
 	}
 }

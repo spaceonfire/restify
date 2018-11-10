@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Executors;
+namespace spaceonfire\Restify\Executors;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
@@ -303,7 +303,7 @@ class UserRest implements IExecutor {
 	}
 
 	private function registerPermissionsCheck() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		$events = [
 			'pre:update',
 			'pre:delete',
@@ -313,7 +313,7 @@ class UserRest implements IExecutor {
 
 		foreach ($events as $event) {
 			EventManager::getInstance()->addEventHandler(
-				$goldenCodeRestify->getId(),
+				$SPACEONFIRE_RESTIFY->getId(),
 				$event,
 				[$this, 'checkPermissions']
 			);

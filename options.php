@@ -7,19 +7,19 @@ Loc::loadMessages(__FILE__);
 
 // Add documentation tab
 if (file_exists(__DIR__ . '/readme.md')) {
-	global $goldenCodeRestify;
+	global $SPACEONFIRE_RESTIFY;
 
-	$goldenCodeRestify->options->addTab('docs', [
+	$SPACEONFIRE_RESTIFY->options->addTab('docs', [
 		'TAB' => Loc::getMessage('DOCS_TAB_NAME'),
 		'TITLE' => Loc::getMessage('DOCS_TAB_TITLE', [
 			'#MODULE_NAME#' => Loc::getMessage('RESTIFY_MODULE_NAME'),
 		]),
 	]);
-	$goldenCodeRestify->options->addOption('DOCUMENTATION', [
+	$SPACEONFIRE_RESTIFY->options->addOption('DOCUMENTATION', [
 		'type' => 'html',
 		'tab' => 'docs',
 		'html' => Parsedown::instance()->text(file_get_contents(__DIR__ . '/readme.md')),
 	]);
 }
 
-$goldenCodeRestify->showOptionsForm();
+$SPACEONFIRE_RESTIFY->showOptionsForm();

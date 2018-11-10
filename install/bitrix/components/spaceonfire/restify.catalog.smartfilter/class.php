@@ -1,12 +1,12 @@
 <?php
 
-namespace goldencode\Bitrix\Restify;
+namespace spaceonfire\Restify;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
-use goldencode\Bitrix\Restify\Executors\CatalogSmartFilterRest;
+use spaceonfire\Restify\Executors\CatalogSmartFilterRest;
 
-if (!Loader::includeModule('goldencode.restify')) return false;
+if (!Loader::includeModule('spaceonfire.restify')) return false;
 
 Loc::loadLanguageFile(__FILE__);
 

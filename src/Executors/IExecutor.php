@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Executors;
+namespace spaceonfire\Restify\Executors;
 
 /**
  * Interface ExecutorInterface

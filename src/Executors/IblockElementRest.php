@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Executors;
+namespace spaceonfire\Restify\Executors;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
@@ -239,10 +239,10 @@ class IblockElementRest implements IExecutor {
 	}
 
 	private function registerCatalogTransform() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
+			$SPACEONFIRE_RESTIFY->getId(),
 			'transform',
 			[$this, 'catalogTransform']
 		);
@@ -286,7 +286,7 @@ class IblockElementRest implements IExecutor {
 	}
 
 	private function registerPermissionsCheck() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		$events = [
 			'pre:create',
 			'pre:update',
@@ -295,7 +295,7 @@ class IblockElementRest implements IExecutor {
 
 		foreach ($events as $event) {
 			EventManager::getInstance()->addEventHandler(
-				$goldenCodeRestify->getId(),
+				$SPACEONFIRE_RESTIFY->getId(),
 				$event,
 				[$this, 'checkPermissions']
 			);

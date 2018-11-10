@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Executors;
+namespace spaceonfire\Restify\Executors;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\Event;
@@ -61,8 +61,8 @@ class CatalogCompareRest implements IExecutor {
 	}
 
 	private function getSessionKey() {
-		global $goldenCodeRestify;
-		return $goldenCodeRestify->getId() . '.catalog.compare';
+		global $SPACEONFIRE_RESTIFY;
+		return $SPACEONFIRE_RESTIFY->getId() . '.catalog.compare';
 	}
 
 	public function prepareQuery() {
@@ -192,10 +192,10 @@ class CatalogCompareRest implements IExecutor {
 	}
 
 	private function registerCatalogTransform() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
+			$SPACEONFIRE_RESTIFY->getId(),
 			'transform',
 			[$this, 'catalogTransform']
 		);
@@ -239,10 +239,10 @@ class CatalogCompareRest implements IExecutor {
 	}
 
 	private function registerIblockTransform() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
+			$SPACEONFIRE_RESTIFY->getId(),
 			'transform',
 			[$this, 'iblockTransform'],
 			false,

@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Executors;
+namespace spaceonfire\Restify\Executors;
 
 use Bitrix\Currency\CurrencyTable;
 use Bitrix\Main\EventManager;
@@ -184,7 +184,7 @@ class SaleOrderRest implements IExecutor {
 	}
 
 	private function registerPermissionsCheck() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		$events = [
 			'pre:create',
 			'pre:readMany',
@@ -193,7 +193,7 @@ class SaleOrderRest implements IExecutor {
 
 		foreach ($events as $event) {
 			EventManager::getInstance()->addEventHandler(
-				$goldenCodeRestify->getId(),
+				$SPACEONFIRE_RESTIFY->getId(),
 				$event,
 				[$this, 'checkPermissions']
 			);

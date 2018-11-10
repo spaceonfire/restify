@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify;
+namespace spaceonfire\Restify;
 
 use Exception;
 use Flight;
@@ -116,8 +116,8 @@ abstract class RouterComponent extends \CBitrixComponent {
 	}
 
 	private function sendEvent($name) {
-		global $goldenCodeRestify;
-		$preAnyEvent = new Event($goldenCodeRestify->getId(), $name, [
+		global $SPACEONFIRE_RESTIFY;
+		$preAnyEvent = new Event($SPACEONFIRE_RESTIFY->getId(), $name, [
 			'executor' => &$this->executor,
 			'result' => &$this->arResult,
 			'params' => &$this->arParams,

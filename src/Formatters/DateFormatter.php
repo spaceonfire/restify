@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Formatters;
+namespace spaceonfire\Restify\Formatters;
 
 class DateFormatter implements IFormatter {
 	/**

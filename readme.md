@@ -1,6 +1,6 @@
-# Bitrix Restify
+# Restify
 
-Rest API для 1С-Битрикс
+Модуль, который позволяет с легкостью создавать REST API для 1С-Битрикс
 
 ## Начало работы
 
@@ -14,7 +14,7 @@ Rest API для 1С-Битрикс
 ### Установка
 
 ```bash
-composer require goldencodeio/bitrix-restify
+composer require spaceonfire/restify
 ```
 
 ## Examples
@@ -30,7 +30,7 @@ use Bitrix\Main\EventManager;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 
 EventManager::getInstance()->addEventHandler(
-	'goldencode.restify',
+	'spaceonfire.restify',
 	'transform',
 	'modifyStatusCode'
 );

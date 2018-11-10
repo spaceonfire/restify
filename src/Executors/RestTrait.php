@@ -1,6 +1,6 @@
 <?php
 
-namespace goldencode\Bitrix\Restify\Executors;
+namespace spaceonfire\Restify\Executors;
 
 use Exception;
 use CSite;
@@ -80,8 +80,8 @@ trait RestTrait {
 	 * @var array Map formatters to schema field types
 	 */
 	private $formatters = [
-		'goldencode\Bitrix\Restify\Formatters\DateFormatter' => 'date',
-		'goldencode\Bitrix\Restify\Formatters\FileFormatter' => 'file',
+		'spaceonfire\Restify\Formatters\DateFormatter' => 'date',
+		'spaceonfire\Restify\Formatters\FileFormatter' => 'file',
 	];
 
 	/**
@@ -322,10 +322,10 @@ trait RestTrait {
 	}
 
 	private function registerBasicTransformHandler() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
+			$SPACEONFIRE_RESTIFY->getId(),
 			'transform',
 			[$this, 'basicTransformActions']
 		);
@@ -384,10 +384,10 @@ trait RestTrait {
 	}
 
 	private function registerOneItemTransformHandler() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
+			$SPACEONFIRE_RESTIFY->getId(),
 			'transform',
 			[$this, 'popOneItemTransformAction'],
 			false,
@@ -401,10 +401,10 @@ trait RestTrait {
 	}
 
 	private function registerOrmNestedFieldsTransform() {
-		global $goldenCodeRestify;
+		global $SPACEONFIRE_RESTIFY;
 		// Register transform
 		EventManager::getInstance()->addEventHandler(
-			$goldenCodeRestify->getId(),
+			$SPACEONFIRE_RESTIFY->getId(),
 			'transform',
 			[$this, 'ormNestedFieldsTransformAction'],
 			false,
