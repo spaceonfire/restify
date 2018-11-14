@@ -163,7 +163,10 @@ abstract class RouterComponent extends \CBitrixComponent {
 	public function cors() {
 		// TODO: get values for headers from options
 		$this->route('*', function () {
-			Flight::response()->header('Access-Control-Allow-Origin', '*');
+			Flight::response()->header([
+				'Access-Control-Allow-Origin' => Flight::request()->getVar('HTTP_ORIGIN') ?: '*',
+				'Vary' => 'Origin',
+			]);
 			return true;
 		});
 
