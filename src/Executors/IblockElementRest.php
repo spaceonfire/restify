@@ -250,6 +250,12 @@ class IblockElementRest implements IExecutor {
 
 	public function catalogTransform(Event $event) {
 		$params = $event->getParameters();
+
+		// Skip for count endpoint
+		if ($params['params']['METHOD'] === 'count') {
+			return;
+		}
+
 		foreach ($params['result'] as $key => $item) {
 			$item['BASE_PRICE'] = CPrice::GetBasePrice($item['ID']);
 			$item['CAN_BUY'] =

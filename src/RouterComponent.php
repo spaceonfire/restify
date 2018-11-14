@@ -44,6 +44,8 @@ abstract class RouterComponent extends \CBitrixComponent {
 			throw new NotFoundHttpException();
 		}
 
+		$this->arParams['METHOD'] = $method;
+
 		$this->executor->prepareQuery();
 
 		$this->sendEvent('pre:any');
@@ -104,6 +106,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 		// TODO: optionally log rest api errors
 	}
 
+	// TODO: move routes definition to executors
 	public function executeComponent() {
 		$this->cors();
 		$this->route('POST /', [$this, 'create']);
