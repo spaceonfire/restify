@@ -177,9 +177,9 @@ abstract class RouterComponent extends \CBitrixComponent {
 		$this->route('OPTIONS *', function () {
 			Flight::response()
 				->header([
-					'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+					'Access-Control-Allow-Methods' => Flight::request()->getVar('HTTP_ACCESS_CONTROL_REQUEST_METHOD') ?: 'GET, POST, OPTIONS',
 					'Access-Control-Max-Age' => '1728000',
-					'Access-Control-Allow-Headers' => '*',
+					'Access-Control-Allow-Headers' => Flight::request()->getVar('HTTP_ACCESS_CONTROL_REQUEST_HEADERS') ?: 'Origin, X-Requested-With, Content-Type, Accept',
 					'Content-Length' => '0',
 				])
 				->status(204)
