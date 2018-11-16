@@ -2,6 +2,7 @@
 
 namespace goldencode\Bitrix\Restify\Executors;
 
+use Emonkak\HttpException\BadRequestHttpException;
 use Exception;
 use CSite;
 use Bitrix\Main\Event;
@@ -149,8 +150,10 @@ trait RestTrait {
 
 			if (!$value) continue;
 
-			if (json_decode($value, true)) {
-				$value = json_decode($value, true);
+			try {
+				$value = json_decode($value, true, 512,  JSON_OBJECT_AS_ARRAY | JSON_THROW_ON_ERROR);
+			} catch (Exception $exception) {
+				throw new BadRequestHttpException($exception->getMessage());
 			}
 
 			switch ($field) {
