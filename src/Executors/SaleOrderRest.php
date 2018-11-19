@@ -4,6 +4,7 @@ namespace goldencode\Bitrix\Restify\Executors;
 
 use Bitrix\Currency\CurrencyTable;
 use Bitrix\Main\EventManager;
+use Bitrix\Main\Event;
 use Bitrix\Main\Localization\Loc;
 use CMain;
 use CSaleBasket;
@@ -58,6 +59,7 @@ class SaleOrderRest implements IExecutor {
 	}
 
 	public function readMany() {
+		$this->registerBasketTransfrom();
 		return $this->readORM();
 	}
 
@@ -224,5 +226,30 @@ class SaleOrderRest implements IExecutor {
 				break;
 			}
 		}
+	}
+
+	private function registerBasketTransfrom() {
+		global $goldenCodeRestify;
+		EventManager::getInstance()->addEventHandler(
+			$goldenCodeRestify->getId(),
+			'transform',
+			[$this, 'basketProductsTransform'],
+			false,
+			99999
+		);
+	}
+
+	public function basketProductsTransform(Event $event) {
+		$params = $event->getParameters();
+		$orderIds = array_unique(array_map(function ($item) { return $item['ID']; }, $params['result']));
+		$result = [];
+		foreach ($orderIds as $id) {
+			$orders = array_filter($params['result'], function ($item) use ($id) { return $item['ID'] === $id; });
+			$order = current($orders);
+			$basket = array_values(array_map(function ($item) { return $item['BASKET']; }, $orders));
+			$order['BASKET'] = $basket;
+			$result[] = $order;
+		}
+		$params['result'] = $result;
 	}
 }

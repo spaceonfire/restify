@@ -1293,7 +1293,10 @@
           "$ref": "#/definitions/RestifyBitrixBool"
         },
         "BASKET": {
-          "$ref": "#/definitions/RestifyBitrixBasketItem"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RestifyBitrixBasketItem"
+          }
         }
       }
     },
