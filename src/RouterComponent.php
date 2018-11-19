@@ -120,13 +120,13 @@ abstract class RouterComponent extends \CBitrixComponent {
 
 	private function sendEvent($name) {
 		global $goldenCodeRestify;
-		$preAnyEvent = new Event($goldenCodeRestify->getId(), $name, [
+		$event = new Event($goldenCodeRestify->getId(), $name, [
 			'executor' => &$this->executor,
 			'result' => &$this->arResult,
 			'params' => &$this->arParams,
 			'statusCode' => &$this->statusCode,
 		]);
-		$preAnyEvent->send();
+		$event->send();
 	}
 
 	/**

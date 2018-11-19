@@ -2,6 +2,7 @@
 
 namespace goldencode\Bitrix\Restify\Formatters;
 
+use Bitrix\Main\Event;
 use CFile;
 
 class FileFormatter implements IFormatter {
@@ -30,7 +31,13 @@ class FileFormatter implements IFormatter {
 		}
 
 		// TODO: make full path optional
-		$file['SRC'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $file['SRC'];
+		// $file['SRC'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $file['SRC'];
+
+		global $goldenCodeRestify;
+		$event = new Event($goldenCodeRestify->getId(), 'OnFileFormatter', [
+			'data' => &$file,
+		]);
+		$event->send();
 
 		return $file;
 	}
