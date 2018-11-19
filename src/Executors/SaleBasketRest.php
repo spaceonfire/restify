@@ -65,7 +65,7 @@ class SaleBasketRest implements IExecutor {
 			throw new NotFoundHttpException();
 		}
 
-		$quantity = (int) $this->body['QUANTITY'] || 1;
+		$quantity = (int) $this->body['QUANTITY'] ?: 1;
 
 		// Find basket item by product id
 		$action = 'add';
