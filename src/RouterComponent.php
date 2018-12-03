@@ -44,6 +44,8 @@ abstract class RouterComponent extends \CBitrixComponent {
 			throw new NotFoundHttpException();
 		}
 
+		$this->arParams['METHOD'] = $method;
+
 		$this->executor->prepareQuery();
 
 		$this->sendEvent('pre:any');
@@ -104,6 +106,7 @@ abstract class RouterComponent extends \CBitrixComponent {
 		// TODO: optionally log rest api errors
 	}
 
+	// TODO: move routes definition to executors
 	public function executeComponent() {
 		$this->cors();
 		$this->route('POST /', [$this, 'create']);
@@ -117,13 +120,13 @@ abstract class RouterComponent extends \CBitrixComponent {
 
 	private function sendEvent($name) {
 		global $SPACEONFIRE_RESTIFY;
-		$preAnyEvent = new Event($SPACEONFIRE_RESTIFY->getId(), $name, [
+		$event = new Event($SPACEONFIRE_RESTIFY->getId(), $name, [
 			'executor' => &$this->executor,
 			'result' => &$this->arResult,
 			'params' => &$this->arParams,
 			'statusCode' => &$this->statusCode,
 		]);
-		$preAnyEvent->send();
+		$event->send();
 	}
 
 	/**
@@ -163,16 +166,20 @@ abstract class RouterComponent extends \CBitrixComponent {
 	public function cors() {
 		// TODO: get values for headers from options
 		$this->route('*', function () {
-			Flight::response()->header('Access-Control-Allow-Origin', '*');
+			Flight::response()->header([
+				'Access-Control-Allow-Origin' => Flight::request()->getVar('HTTP_ORIGIN') ?: '*',
+				'Access-Control-Allow-Credentials' => 'true',
+				'Vary' => 'Origin',
+			]);
 			return true;
 		});
 
 		$this->route('OPTIONS *', function () {
 			Flight::response()
 				->header([
-					'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+					'Access-Control-Allow-Methods' => Flight::request()->getVar('HTTP_ACCESS_CONTROL_REQUEST_METHOD') ?: 'GET, POST, OPTIONS',
 					'Access-Control-Max-Age' => '1728000',
-					'Access-Control-Allow-Headers' => '*',
+					'Access-Control-Allow-Headers' => Flight::request()->getVar('HTTP_ACCESS_CONTROL_REQUEST_HEADERS') ?: 'Origin, X-Requested-With, Content-Type, Accept',
 					'Content-Length' => '0',
 				])
 				->status(204)

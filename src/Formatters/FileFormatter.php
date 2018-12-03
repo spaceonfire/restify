@@ -2,6 +2,7 @@
 
 namespace spaceonfire\Restify\Formatters;
 
+use Bitrix\Main\Event;
 use CFile;
 
 class FileFormatter implements IFormatter {
@@ -30,7 +31,13 @@ class FileFormatter implements IFormatter {
 		}
 
 		// TODO: make full path optional
-		$file['SRC'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $file['SRC'];
+		// $file['SRC'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $file['SRC'];
+
+		global $SPACEONFIRE_RESTIFY;
+		$event = new Event($SPACEONFIRE_RESTIFY->getId(), 'OnFileFormatter', [
+			'data' => &$file,
+		]);
+		$event->send();
 
 		return $file;
 	}

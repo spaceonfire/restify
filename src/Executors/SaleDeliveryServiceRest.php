@@ -7,7 +7,9 @@ use Emonkak\HttpException\NotFoundHttpException;
 use Exception;
 
 class SaleDeliveryServiceRest implements IExecutor {
-	use RestTrait;
+	use RestTrait {
+		buildSchema as private _buildSchema;
+	}
 
 	private $entity = 'Bitrix\Sale\Delivery\Services\Table';
 
@@ -27,6 +29,13 @@ class SaleDeliveryServiceRest implements IExecutor {
 		$this->setPropertiesFromArray($options);
 		$this->registerBasicTransformHandler();
 		$this->buildSchema();
+	}
+
+	private function buildSchema() {
+		$this->_buildSchema();
+		$schema = $this->get('schema');
+		$schema['LOGOTIP'] = 'file';
+		$this->set('schema', $schema);
 	}
 
 	public function readMany() {

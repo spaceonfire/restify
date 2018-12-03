@@ -21,6 +21,8 @@ composer require spaceonfire/restify
 
 ### Events
 
+API output transformation
+
 ```php
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php';
@@ -43,4 +45,16 @@ function modifyStatusCode(Event $event) {
 	$params = $event->getParameters();
 	$params['statusCode'] = 500;
 }
+```
+
+Build full path to image in FileFormatter
+
+```php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventManager;
+
+EventManager::getInstance()->addEventHandler('spaceonfire.restify', 'OnFileFormatter', function(Event $event) {
+	$params = $event->getParameters();
+	$params['data']['SRC'] = $_SERVER['REQUEST_SCHEME'] . '://' . (env('DOMAIN') ?: $_SERVER['HTTP_HOST']) . $params['data']['SRC'];
+});
 ```
