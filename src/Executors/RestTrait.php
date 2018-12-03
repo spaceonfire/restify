@@ -14,7 +14,6 @@ use Bitrix\Main\Localization\Loc;
 use Emonkak\HttpException\InternalServerErrorHttpException;
 use Flight;
 use flight\net\Request;
-use goldencode\Helpers\Bitrix\Tools;
 use ReflectionObject;
 use ReflectionProperty;
 
@@ -337,7 +336,6 @@ trait RestTrait {
 	public function basicTransformActions(Event $event) {
 		$params = $event->getParameters();
 		foreach ($params['result'] as $key => $item) {
-			$item = Tools::removeTildaKeys($item);
 			$item = self::decodeSpecialChars($item);
 			$item = $this->runFormatters($item);
 			$params['result'][$key] = $item;

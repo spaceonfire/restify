@@ -86,7 +86,7 @@ class IblockSectionRest implements IExecutor {
 		);
 
 		$results = [];
-		while ($item = $query->GetNext()) {
+		while ($item = $query->GetNext(true, false)) {
 			$results[] = $item;
 		}
 

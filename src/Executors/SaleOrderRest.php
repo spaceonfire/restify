@@ -105,7 +105,7 @@ class SaleOrderRest implements IExecutor {
 			'ORDER_ID' => 'NULL'
 		]);
 		$orderPrice = 0;
-		while ($item = $dbBasketItems->GetNext()) {
+		while ($item = $dbBasketItems->GetNext(true, false)) {
 			$orderPrice += (float) $item['PRICE'] * $item['QUANTITY'];
 		}
 
@@ -166,7 +166,7 @@ class SaleOrderRest implements IExecutor {
 
 		// Add props
 		$orderPropsQ = (new CSaleOrderProps())->GetList();
-		while ($prop = $orderPropsQ->GetNext()) {
+		while ($prop = $orderPropsQ->GetNext(true, false)) {
 			if (isset($this->body[$prop['CODE']])) {
 				(new CSaleOrderPropsValue())->Add([
 					'ORDER_ID' => $orderId,

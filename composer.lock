@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f30057ef08c92a80b95fe90b3d0d4d1f",
+    "content-hash": "a01a777b155308022769caabb479e6b4",
     "packages": [
         {
             "name": "composer/installers",
@@ -213,60 +213,17 @@
             "time": "2018-06-11T18:15:32+00:00"
         },
         {
-            "name": "goldencodeio/tools.php",
-            "version": "1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/goldencodeio/tools.php.git",
-                "reference": "5ec7002974f129a226e2e1d2cfea4aed06a8f980"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/goldencodeio/tools.php/zipball/5ec7002974f129a226e2e1d2cfea4aed06a8f980",
-                "reference": "5ec7002974f129a226e2e1d2cfea4aed06a8f980",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "5.2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "goldencode\\Helpers\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Constantine Karnaukhov",
-                    "email": "1119@zolotoykod.ru"
-                }
-            ],
-            "description": "Utility classes for PHP projects",
-            "keywords": [
-                "bitrix",
-                "tools"
-            ],
-            "time": "2018-10-05T06:47:58+00:00"
-        },
-        {
             "name": "mikecao/flight",
-            "version": "v1.3.5",
+            "version": "v1.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikecao/flight.git",
-                "reference": "e146b8c0ddbc6384c5a66f23dea71743fc282289"
+                "reference": "7d5970f7617861c868a5c728764421d8950faaf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikecao/flight/zipball/e146b8c0ddbc6384c5a66f23dea71743fc282289",
-                "reference": "e146b8c0ddbc6384c5a66f23dea71743fc282289",
+                "url": "https://api.github.com/repos/mikecao/flight/zipball/7d5970f7617861c868a5c728764421d8950faaf0",
+                "reference": "7d5970f7617861c868a5c728764421d8950faaf0",
                 "shasum": ""
             },
             "require": {
@@ -296,7 +253,7 @@
             ],
             "description": "Flight is a fast, simple, extensible framework for PHP. Flight enables you to quickly and easily build RESTful web applications.",
             "homepage": "http://flightphp.com",
-            "time": "2017-10-20T01:46:56+00:00"
+            "time": "2018-11-23T23:05:33+00:00"
         },
         {
             "name": "spaceonfire/bmf",
@@ -1568,16 +1525,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.18",
+            "version": "v3.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "640b6c27fed4066d64b64d5903a86043f4a4de7f"
+                "reference": "291e13d808bec481eab83f301f7bff3e699ef603"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/640b6c27fed4066d64b64d5903a86043f4a4de7f",
-                "reference": "640b6c27fed4066d64b64d5903a86043f4a4de7f",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/291e13d808bec481eab83f301f7bff3e699ef603",
+                "reference": "291e13d808bec481eab83f301f7bff3e699ef603",
                 "shasum": ""
             },
             "require": {
@@ -1623,7 +1580,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-02T16:33:53+00:00"
+            "time": "2018-11-11T19:48:54+00:00"
         },
         {
             "name": "webmozart/assert",
