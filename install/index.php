@@ -23,7 +23,6 @@ class spaceonfire_restify extends CModule
 			$this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
 		}
 
-		$this->MODULE_ID = 'spaceonfire.restify';
 		$this->MODULE_NAME = Loc::getMessage('RESTIFY_MODULE_NAME');
 		$this->MODULE_DESCRIPTION = Loc::getMessage('RESTIFY_MODULE_DESCRIPTION');
 		$this->MODULE_GROUP_RIGHTS = 'N';
@@ -38,6 +37,7 @@ class spaceonfire_restify extends CModule
 		if ($this->isDevelopmentMode()) {
 			$this->DEV_LINKS = [
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.swagger' => __DIR__ . '/bitrix/components/spaceonfire/restify.swagger',
+				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.search' => __DIR__ . '/bitrix/components/spaceonfire/restify.search',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.custom' => __DIR__ . '/bitrix/components/spaceonfire/restify.custom',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.main.user' => __DIR__ . '/bitrix/components/spaceonfire/restify.main.user',
 				$_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/spaceonfire/restify.iblock.element' => __DIR__ . '/bitrix/components/spaceonfire/restify.iblock.element',
