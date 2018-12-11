@@ -12,7 +12,6 @@ Loc::loadLanguageFile(__FILE__);
 
 class RestifyCatalogCompareComponent extends RouterComponent {
 	public function executeComponent() {
-//		$this->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_QUOT | JSON_FORCE_OBJECT);
 		$executor = new CatalogCompareRest($this->arParams);
 		$this->setExecutor($executor);
 		$this->cors();

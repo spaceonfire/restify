@@ -41,6 +41,13 @@
       "description": "Код списка сравнения",
       "type": "string"
     },
+    "RestifyBitrixSearchQuery": {
+      "in": "query",
+      "name": "q",
+      "description": "Поисковой запрос",
+      "type": "string",
+      "required": "true"
+    },
     "RestifyBitrixId": {
       "in": "path",
       "name": "id",
@@ -1363,6 +1370,90 @@
               }
             }
           }
+        }
+      }
+    },
+    "RestifyBitrixSearchResultItem": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "MODULE_ID": {
+          "type": "string"
+        },
+        "ITEM_ID": {
+          "type": "integer"
+        },
+        "TITLE": {
+          "type": "string"
+        },
+        "TITLE_FORMATED": {
+          "type": "string"
+        },
+        "TITLE_FORMATED_TYPE": {
+          "type": "string"
+        },
+        "TAGS": {
+          "type": "string"
+        },
+        "TAGS_FORMATED": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "BODY": {
+          "type": "string"
+        },
+        "BODY_FORMATED": {
+          "type": "string"
+        },
+        "BODY_FORMATED_TYPE": {
+          "type": "string"
+        },
+        "PARAM1": {
+          "type": "string"
+        },
+        "PARAM2": {
+          "type": "string"
+        },
+        "DATE_FROM": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "DATE_TO": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "FULL_DATE_CHANGE": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "DATE_CHANGE": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "URL": {
+          "type": "string"
+        },
+        "URL_WO_PARAMS": {
+          "type": "string"
+        },
+        "SERVER_NAME": {
+          "type": "string"
+        },
+        "CUSTOM_RANK": {
+          "type": "number"
+        },
+        "RANK": {
+          "type": "number"
+        },
+        "USER_ID": {
+          "type": "integer"
+        },
+        "DIR": {
+          "type": "string"
         }
       }
     }
